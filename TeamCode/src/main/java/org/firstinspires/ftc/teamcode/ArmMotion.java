@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -57,7 +58,8 @@ public class ArmMotion extends OpMode
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor armMotion = null;
-    private DcMotor grabMotion = null;
+    private Servo grabMotion1 = null;
+    private Servo grabMotion2 = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -69,11 +71,14 @@ public class ArmMotion extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        armMotion = hardwareMap.get(DcMotor.class, "left_drive");
-
+        armMotion = hardwareMap.get(DcMotor.class, "arm_motor");
+        grabMotion1 = hardwareMap.get(Servo.class, "left_grab");
+        grabMotion2 = hardwareMap.get(Servo.class, "right_grab");
 
 
         armMotion.setDirection(DcMotor.Direction.REVERSE);
+        grabMotion1.setDirection(Servo.Direction.FORWARD);
+        grabMotion2.setDirection(Servo.Direction.REVERSE);
 
 
         // Tell the driver that initialization is complete.
@@ -100,8 +105,16 @@ public class ArmMotion extends OpMode
      */
     @Override
     public void loop() {
+        if (gamepad1.left_bumper){
+            grabMotion1.setPosition(0.25); //BRUNO WAS HERE
+            grabMotion2.setPosition(0.25);
+        } else
+        if (gamepad1.right_bumper){
+            grabMotion1.setPosition(0);
+            grabMotion2.setPosition(0);
+        } else{}
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "Arm motion, Grab motion", armMotion, grabMotion);
+        telemetry.addData("Motors", "Arm motion, Grab motion", armMotion, grabMotion1);
     }
 
     /*
