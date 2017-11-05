@@ -71,9 +71,9 @@ public class ArmMotion extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        armMotion = hardwareMap.get(DcMotor.class, "arm_motor");
-        grabMotion1 = hardwareMap.get(Servo.class, "left_grab");
-        grabMotion2 = hardwareMap.get(Servo.class, "right_grab");
+        armMotion = hardwareMap.get(DcMotor.class, "left_arm");
+        grabMotion1 = hardwareMap.get(Servo.class, "left_hand");
+        grabMotion2 = hardwareMap.get(Servo.class, "right_hand");
 
 
         armMotion.setDirection(DcMotor.Direction.REVERSE);
