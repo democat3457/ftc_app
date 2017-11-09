@@ -105,11 +105,11 @@ public class Auto_OpMode extends OpMode
      */
     @Override
     public void loop() {
-        if (gamepad1.left_bumper){
-            grabMotion1.setPosition(0.25); //BRUNO WAS HERE
+        if (true){
+            grabMotion1.setPosition(0.25);
             grabMotion2.setPosition(0.25);
         } else
-        if (gamepad1.right_bumper){
+        if (false){
             grabMotion1.setPosition(0);
             grabMotion2.setPosition(0);
         } else{}
