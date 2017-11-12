@@ -103,7 +103,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code onthe next line, between the double quotes.
          */
-        parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+        parameters.vuforiaLicenseKey = "AUzwlmf/////AAAAGeF4fSfKj0E/sO0hGm4OxLlklqv9XKWdCvCrqpCCorEeqIADLYyvs7tJkvKgL8R7HQ01gUBiA4oF/kqDjRADZOVXUqPN8RLQtERPIkWxE9T1AKHOw5WuV3N8T5j2eMbjyoZbklh5jDILSWiDS3gZRKV5zHTxxi3508j9GfvzAexl+4kOznoXN8fWfiPcTMUmPGp4yERKhbAmksRlTggK83mFxfyc4yB1zNptmSvJ9JP3FqhYxfjtnelYPDQwmQMjDd+P6GNQgZpt79wlYqlvOFmOdcs85WTbrItBpxc6yHLxKJTHclzuTKYpSxErgEOsfQ8vWJrSHmknv+N6wv161rFw5lrz2j2X4/mrS37X00Aj";
 
         /*
          * We also indicate which camera on the RC that we wish to use.
