@@ -7,9 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/**
- * Created by Neeka on 11/2/2017.
- */
 @Autonomous(name = "RotateServo", group = "Linear Opmode")
 //@Disabled
 public class RotateServo extends LinearOpMode{
@@ -29,7 +26,6 @@ public class RotateServo extends LinearOpMode{
         while(opModeIsActive()) {
             telemetry.addData("Status","Run Time: ",runtime.toString());
             telemetry.update();
-
             idle();
         }
 

@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -58,7 +59,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.01 ;                 // sets rate to move servo
-
+    int upTargPos = 3000; //upwards bound of the encoder for the arm
+    int downTargPos = 1000; // lower bound of the encoder for the arm
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -71,6 +73,8 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Driver!");    //
+        robot.leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
 
     /*
@@ -95,9 +99,20 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         double left;
         double right;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        //deadzone
+        if (Math.abs(gamepad1.left_stick_y)<0.125){
+            left = 0;
+        }
+        else {
+            left = -gamepad1.left_stick_y;
+        }
+        if (Math.abs(gamepad1.right_stick_y)<0.125){
+            right = 0;
+        }
+        else {
+            right = -gamepad1.right_stick_y;
+        }
+
 
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
@@ -114,12 +129,21 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
-            robot.leftArm.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
-            robot.leftArm.setPower(robot.ARM_DOWN_POWER);
-        else
+        if (gamepad1.y) {
+            robot.leftArm.setTargetPosition(upTargPos);
+            while(robot.leftArm.getCurrentPosition() < robot.leftArm.getTargetPosition())
+                robot.leftArm.setPower(robot.ARM_UP_POWER);
+            robot.leftArm.setPower(0);
+        }
+        else if (gamepad1.a) {
+            robot.leftArm.setTargetPosition(downTargPos);
+            while(robot.leftArm.getCurrentPosition() > robot.leftArm.getTargetPosition())
+                robot.leftArm.setPower(robot.ARM_DOWN_POWER);
+            robot.leftArm.setPower(0);
+        }
+        else {
             robot.leftArm.setPower(0.0);
+        }
 
         // Send telemetry message to signify robot running;
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
