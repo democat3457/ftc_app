@@ -57,10 +57,10 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     /* Declare OpMode members. */
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
-    double          clawOffset  = 0.0 ;                  // Servo mid position
+    double          clawOffset  = 0.1 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.01 ;                 // sets rate to move servo
-    int upTargPos = 3000; //upwards bound of the encoder for the arm
-    int downTargPos = 1000; // lower bound of the encoder for the arm
+    int upTargPos = 1700; //upwards bound of the encoder for the arm
+    int downTargPos = -181; // lower bound of the encoder for the arm
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -73,7 +73,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Driver!");    //
-        robot.leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
 
@@ -96,6 +96,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void loop() {
+        telemetry.addData("Encoder Value: ", robot.leftArm.getCurrentPosition());
         double left;
         double right;
 
@@ -129,22 +130,33 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y) {
+        /*if (gamepad1.y) {
             robot.leftArm.setTargetPosition(upTargPos);
-            while(robot.leftArm.getCurrentPosition() < robot.leftArm.getTargetPosition())
+            if (robot.leftArm.getCurrentPosition() < robot.leftArm.getTargetPosition())
                 robot.leftArm.setPower(robot.ARM_UP_POWER);
-            robot.leftArm.setPower(0);
+            else
+                robot.leftArm.setPower(0);
         }
         else if (gamepad1.a) {
             robot.leftArm.setTargetPosition(downTargPos);
-            while(robot.leftArm.getCurrentPosition() > robot.leftArm.getTargetPosition())
+            if(robot.leftArm.getCurrentPosition() > robot.leftArm.getTargetPosition())
                 robot.leftArm.setPower(robot.ARM_DOWN_POWER);
-            robot.leftArm.setPower(0);
+            else
+                robot.leftArm.setPower(0);
+        }
+        else {
+            robot.leftArm.setPower(0.0);
+        }*/
+
+        if (gamepad1.y) {
+            robot.leftArm.setPower(robot.ARM_UP_POWER);
+        }
+        else if (gamepad1.a) {
+            robot.leftArm.setPower(robot.ARM_DOWN_POWER);
         }
         else {
             robot.leftArm.setPower(0.0);
         }
-
         // Send telemetry message to signify robot running;
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);

@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class RotateServo extends LinearOpMode{
     private ElapsedTime runtime = new ElapsedTime();
     Servo servo;
-    double servoPosition=0.0;
+    double servoPosition=1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -33,7 +33,7 @@ public class RotateServo extends LinearOpMode{
         servo.setPosition(servoPosition);
         sleep(2000);
 
-        servoPosition=1.0;
+        servoPosition=0.0;
         servo.setPosition(servoPosition);
     }
 }
