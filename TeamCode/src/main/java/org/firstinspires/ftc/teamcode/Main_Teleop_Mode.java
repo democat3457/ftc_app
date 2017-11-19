@@ -69,8 +69,6 @@ public class Main_Teleop_Mode extends OpMode{
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.1 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.01 ;                 // sets rate to move servo
-    int upTargPos = 1700; //upwards bound of the encoder for the arm
-    int downTargPos = -181; // lower bound of the encoder for the arm
     int upTargPos = 1600; //upwards bound of the encoder for the arm
     int downTargPos = -50; // lower bound of the encoder for the arm
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
@@ -185,9 +183,6 @@ public class Main_Teleop_Mode extends OpMode{
                 robot.leftArm.setPower(robot.ARM_UP_POWER);
             else
                 robot.leftArm.setPower(0);
-        if (gamepad1.y) {
-            linearSlide(0.1, 1);
-        }
         else if (gamepad1.a) {
             robot.leftArm.setTargetPosition(downTargPos);
             if(robot.leftArm.getCurrentPosition() > robot.leftArm.getTargetPosition())
@@ -195,6 +190,10 @@ public class Main_Teleop_Mode extends OpMode{
             else
                 robot.leftArm.setPower(0);
             linearSlide(-0.1, -1);
+        }
+
+        if (gamepad1.y) {
+            linearSlide(0.1, 1);
         }
         else {
             robot.leftArm.setPower(0.0);
