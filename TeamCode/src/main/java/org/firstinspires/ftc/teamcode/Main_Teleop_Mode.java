@@ -116,7 +116,7 @@ public class Main_Teleop_Mode extends OpMode{
         robot.init(hardwareMap);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Driver!");    //
