@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
  * This is NOT an opmode.
@@ -59,10 +60,16 @@ public class HardwarePushbot
     public DcMotor  leftArm     = null;
     public Servo    leftClaw    = null;
     public Servo    rightClaw   = null;
+//    public ColorSensor color_sensor = null;
 
-    public static final double MID_SERVO       =  0.45 ;
+    public static final double LEFT_MID_SERVO  =  0.27 ;
+    public static final double RIGHT_MID_SERVO =  0.56 ;
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
+//    public static final double LEFT_CLAW_MIN   =  0.23 ;
+//    public static final double LEFT_CLAW_MAX   =  0.35 ;
+//    public static final double RIGHT_CLAW_MIN  =  0.5  ;
+//    public static final double RIGHT_CLAW_MAX  =  0.62 ;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -95,12 +102,12 @@ public class HardwarePushbot
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Define and initialize ALL installed servos.
         leftClaw  = hwMap.get(Servo.class, "left_hand");
         rightClaw = hwMap.get(Servo.class, "right_hand");
-        leftClaw.setPosition(MID_SERVO);
-        rightClaw.setPosition(MID_SERVO);
+        leftClaw.setPosition(LEFT_MID_SERVO);
+        rightClaw.setPosition(RIGHT_MID_SERVO);
+
     }
  }
