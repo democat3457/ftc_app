@@ -34,6 +34,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import static android.os.SystemClock.sleep;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -54,13 +62,49 @@ import com.qualcomm.robotcore.util.Range;
 //@Disabled
 public class Main_Teleop_Mode extends OpMode{
 
+    private ElapsedTime runtime = new ElapsedTime();
+
     /* Declare OpMode members. */
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.01 ;                 // sets rate to move servo
-    int upTargPos = 3000; //upwards bound of the encoder for the arm
-    int downTargPos = 1000; // lower bound of the encoder for the arm
+    int upTargPos = 1600; //upwards bound of the encoder for the arm
+    int downTargPos = -50; // lower bound of the encoder for the arm
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
+
+    public void driveLine (double speed, double inches){
+        int startPos = robot.leftArm.getCurrentPosition();
+        robot.leftArm.setPower(speed);
+        while (Math.abs(robot.leftArm.getCurrentPosition()-startPos)<=(int)(inches*(1120/4))){
+
+            telemetry.update();
+
+        }
+        robot.leftArm.setPower(0);
+
+
+
+
+    }
+
+    public void linearSlide(double speed, double inches){
+        robot.leftArm.setPower(speed);
+        robot.leftArm.setTargetPosition((int)inches*1120/4);
+
+        while (robot.leftArm.isBusy()){
+            telemetry.update();
+        }
+        sleep(200);
+
+
+    }
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -70,6 +114,9 @@ public class Main_Teleop_Mode extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Driver!");    //
@@ -130,16 +177,10 @@ public class Main_Teleop_Mode extends OpMode{
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
         if (gamepad1.y) {
-            robot.leftArm.setTargetPosition(upTargPos);
-            while(robot.leftArm.getCurrentPosition() < robot.leftArm.getTargetPosition())
-                robot.leftArm.setPower(robot.ARM_UP_POWER);
-            robot.leftArm.setPower(0);
+            linearSlide(0.1, 1);
         }
         else if (gamepad1.a) {
-            robot.leftArm.setTargetPosition(downTargPos);
-            while(robot.leftArm.getCurrentPosition() > robot.leftArm.getTargetPosition())
-                robot.leftArm.setPower(robot.ARM_DOWN_POWER);
-            robot.leftArm.setPower(0);
+            linearSlide(-0.1, -1);
         }
         else {
             robot.leftArm.setPower(0.0);
