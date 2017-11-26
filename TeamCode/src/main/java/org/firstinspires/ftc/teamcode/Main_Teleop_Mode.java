@@ -113,7 +113,7 @@ public class Main_Teleop_Mode extends OpMode{
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // Send telemetry message to signify robot waiting;
+        // debug info for claw
         telemetry.addData("claw",  "Claw Offset = %.2f", clawOffset);
         telemetry.addData("left claw", robot.leftClaw.getPosition());
         telemetry.addData("right claw", robot.rightClaw.getPosition());
@@ -157,14 +157,14 @@ public class Main_Teleop_Mode extends OpMode{
             right = -gamepad1.right_stick_y;
         }
 
-
+        // chassis movement
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
 
         // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper) {
+        if (gamepad2.right_bumper) {
             clawOffset += CLAW_SPEED;
-        } else if (gamepad1.left_bumper){
+        } else if (gamepad2.left_bumper){
             clawOffset -= CLAW_SPEED;
         }
 
@@ -178,7 +178,7 @@ public class Main_Teleop_Mode extends OpMode{
         telemetry.addData("left claw", robot.leftClaw.getPosition());
         telemetry.addData("right claw", robot.rightClaw.getPosition());
 
-        // Use gamepad buttons to move the arm up (Y) and down (A)
+        // arm movement with encoder
         /*
         if (gamepad1.y) {
             robot.leftArm.setTargetPosition(upTargPos);
@@ -200,12 +200,14 @@ public class Main_Teleop_Mode extends OpMode{
         }
         else {
             robot.leftArm.setPower(0.0);
-        }*/
+        }
+        */
 
-        if (gamepad1.y) {
+        // Use gamepad buttons to move the arm up (Y) and down (A)
+        if (gamepad2.y) {
             robot.leftArm.setPower(robot.ARM_UP_POWER);
         }
-        else if (gamepad1.a) {
+        else if (gamepad2.a) {
             robot.leftArm.setPower(robot.ARM_DOWN_POWER);
         }
         else {

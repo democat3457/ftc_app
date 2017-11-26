@@ -72,7 +72,7 @@ public class HardwarePushbot
 //    public static final double RIGHT_CLAW_MAX  =  0.62 ;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
+    HardwareMap hwMap           = null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
