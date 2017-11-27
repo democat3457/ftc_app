@@ -157,6 +157,10 @@ public class Main_Teleop_Mode extends OpMode{
             right = -gamepad1.right_stick_y;
         }
 
+        // debug info for chassis movement
+        telemetry.addData("Wheels", "left motor", robot.leftDrive.getPower());
+        telemetry.addData("Wheels", "right motor", robot.rightDrive.getPower());
+
         // chassis movement
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);

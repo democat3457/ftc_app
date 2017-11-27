@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -60,12 +61,17 @@ public class HardwarePushbot
     public DcMotor  leftArm     = null;
     public Servo    leftClaw    = null;
     public Servo    rightClaw   = null;
-//    public ColorSensor color_sensor = null;
+    public Servo    jewelServo  = null;
+    public ColorSensor sensorColor = null;
+    public DistanceSensor sensorDistance = null;
 
     public static final double LEFT_MID_SERVO  =  0.27 ;
     public static final double RIGHT_MID_SERVO =  0.56 ;
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
+    public static final double JEWEL_UP_LIMIT   = 0.48 ;
+    public static final double JEWEL_DOWN_LIMIT = -0.05 ;
+    public static final double JEWEL_ARM_SPEED  = 0.05  ;
 //    public static final double LEFT_CLAW_MIN   =  0.23 ;
 //    public static final double LEFT_CLAW_MAX   =  0.35 ;
 //    public static final double RIGHT_CLAW_MIN  =  0.5  ;
@@ -106,8 +112,13 @@ public class HardwarePushbot
         // Define and initialize ALL installed servos.
         leftClaw  = hwMap.get(Servo.class, "left_hand");
         rightClaw = hwMap.get(Servo.class, "right_hand");
+        jewelServo= hwMap.get(Servo.class, "jewel_arm");
         leftClaw.setPosition(LEFT_MID_SERVO);
         rightClaw.setPosition(RIGHT_MID_SERVO);
+        jewelServo.setPosition(0.48);
+
+        sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
+        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
 
     }
  }
