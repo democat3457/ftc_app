@@ -142,19 +142,24 @@ public class Main_Teleop_Mode extends OpMode{
     @Override
     public void loop() {
         telemetry.addData("Encoder Value: ", robot.leftArm.getCurrentPosition());
+
+        // keeps jewel arm upright
+        robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
+        robot.sensorColor.enableLed(false);
+
         double left;
         double right;
 
-        //deadzone
-        if (Math.abs(gamepad1.left_stick_y) < 0.125) {
+        // dead zone
+        if (Math.abs(gamepad1.right_stick_y) < 0.125) {
             left = 0;
         } else {
-            left = -gamepad1.left_stick_y;
+            left = gamepad1.right_stick_y;
         }
-        if (Math.abs(gamepad1.right_stick_y) < 0.125) {
+        if (Math.abs(gamepad1.left_stick_y) < 0.125) {
             right = 0;
         } else {
-            right = -gamepad1.right_stick_y;
+            right = gamepad1.left_stick_y;
         }
 
         // debug info for chassis movement

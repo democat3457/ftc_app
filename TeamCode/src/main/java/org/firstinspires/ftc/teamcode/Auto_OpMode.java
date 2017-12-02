@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="ArmMotion", group="Iterative Opmode")
-//@Disabled
+@Disabled
 public class Auto_OpMode extends OpMode
 {
     // Declare OpMode members.
