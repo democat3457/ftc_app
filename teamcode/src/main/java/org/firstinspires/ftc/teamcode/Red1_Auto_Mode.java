@@ -8,12 +8,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "Red1 Auto Mode", group = "Linear Opmode")
+@Autonomous(name = "Red Team Auto Mode", group = "Linear Opmode")
 //@Disabled
 public class Red1_Auto_Mode extends LinearOpMode {
-    private ElapsedTime runtime = new ElapsedTime();
-
     HardwarePushbot robot = new HardwarePushbot();
+    private ElapsedTime runtime = new ElapsedTime();
 
 
 
@@ -47,7 +46,6 @@ public class Red1_Auto_Mode extends LinearOpMode {
 
     }
     */
-
 
     public void forward(double power, double time) {
         double startTime = runtime.time(TimeUnit.SECONDS);
@@ -122,6 +120,7 @@ public class Red1_Auto_Mode extends LinearOpMode {
             color = "blue";
         }
         telemetry.addData("Status", "About to set arm to up pos");
+        telemetry.update();
         // move jewel arm to up position
         telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
         telemetry.update();
@@ -152,7 +151,7 @@ public class Red1_Auto_Mode extends LinearOpMode {
         telemetry.addData("Red  ", robot.sensorColor.red());
         telemetry.addData("Green", robot.sensorColor.green());
         telemetry.addData("Blue ", robot.sensorColor.blue());
-
+        telemetry.addData("Color Detected", color);
         telemetry.update();
 
         sleep(7000);

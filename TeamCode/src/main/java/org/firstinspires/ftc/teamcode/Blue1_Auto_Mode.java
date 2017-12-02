@@ -1,27 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
-import android.view.View;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "Blue1 Auto Mode", group = "Linear Opmode")
+@Autonomous(name = "Blue Team Auto Mode", group = "Linear Opmode")
 //@Disabled
 public class Blue1_Auto_Mode extends LinearOpMode {
-    private ElapsedTime runtime = new ElapsedTime();
-
     HardwarePushbot robot = new HardwarePushbot();
+    private ElapsedTime runtime = new ElapsedTime();
 
 
 
@@ -55,7 +46,6 @@ public class Blue1_Auto_Mode extends LinearOpMode {
 
     }
     */
-
 
     public void forward(double power, double time) {
         double startTime = runtime.time(TimeUnit.SECONDS);
@@ -123,13 +113,14 @@ public class Blue1_Auto_Mode extends LinearOpMode {
             forward(0.35, 0.10);
             color = "red";
         } else if (robot.sensorColor.red() > robot.sensorColor.blue()) {
-            // moving backwards to knock off the jewel
+            // moving backward to knock off the jewel
             telemetry.addData("Status", "About to move backward");
             telemetry.update();
             forward(-0.35, 0.10);
             color = "blue";
         }
         telemetry.addData("Status", "About to set arm to up pos");
+        telemetry.update();
         // move jewel arm to up position
         telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
         telemetry.update();
@@ -160,7 +151,7 @@ public class Blue1_Auto_Mode extends LinearOpMode {
         telemetry.addData("Red  ", robot.sensorColor.red());
         telemetry.addData("Green", robot.sensorColor.green());
         telemetry.addData("Blue ", robot.sensorColor.blue());
-
+        telemetry.addData("Color Detected", color);
         telemetry.update();
 
         sleep(7000);

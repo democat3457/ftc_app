@@ -32,35 +32,34 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
- *
+ * <p>
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
- *
+ * <p>
  * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
 @TeleOp(name = "Pushbot: Teleop Tank", group = "Pushbot")
 //@Disabled
-public class Main_Teleop_Mode extends OpMode{
+public class Main_Teleop_Mode extends OpMode {
 
-    private ElapsedTime runtime = new ElapsedTime();
-
+    final double CLAW_SPEED = 0.01;                 // sets rate to move servo
     /* Declare OpMode members. */
-    HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
-                                                         // could also use HardwarePushbotMatrix class.
-    double clawOffset = 0 ;                  // Servo mid position
-    final double    CLAW_SPEED  = 0.01 ;                 // sets rate to move servo
+    HardwarePushbot robot = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+    // could also use HardwarePushbotMatrix class.
+    double clawOffset = 0;                  // Servo mid position
+    private ElapsedTime runtime = new ElapsedTime();
     //int upTargPos = 1600; //upwards bound of the encoder for the arm
     //int downTargPos = -50; // lower bound of the encoder for the arm
     //static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
@@ -114,7 +113,7 @@ public class Main_Teleop_Mode extends OpMode{
         robot.leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // debug info for claw
-        telemetry.addData("claw",  "Claw Offset = %.2f", clawOffset);
+        telemetry.addData("claw", "Claw Offset = %.2f", clawOffset);
         telemetry.addData("left claw", robot.leftClaw.getPosition());
         telemetry.addData("right claw", robot.rightClaw.getPosition());
         telemetry.addData("Say", "Hello, Driver!");    //
@@ -173,7 +172,7 @@ public class Main_Teleop_Mode extends OpMode{
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad2.right_bumper) {
             clawOffset += CLAW_SPEED;
-        } else if (gamepad2.left_bumper){
+        } else if (gamepad2.left_bumper) {
             clawOffset -= CLAW_SPEED;
         }
 
@@ -183,7 +182,7 @@ public class Main_Teleop_Mode extends OpMode{
         robot.rightClaw.setPosition(robot.RIGHT_MID_SERVO - clawOffset);
 
         // debug info for claws
-        telemetry.addData("claw",  "Claw Offset = %.2f", clawOffset);
+        telemetry.addData("claw", "Claw Offset = %.2f", clawOffset);
         telemetry.addData("left claw", robot.leftClaw.getPosition());
         telemetry.addData("right claw", robot.rightClaw.getPosition());
 
@@ -215,16 +214,14 @@ public class Main_Teleop_Mode extends OpMode{
         // Use gamepad buttons to move the arm up (Y) and down (A)
         if (gamepad2.y) {
             robot.leftArm.setPower(robot.ARM_UP_POWER);
-        }
-        else if (gamepad2.a) {
+        } else if (gamepad2.a) {
             robot.leftArm.setPower(robot.ARM_DOWN_POWER);
-        }
-        else {
+        } else {
             robot.leftArm.setPower(0.0);
         }
         // Send telemetry message to signify robot running;
 
-        telemetry.addData("left",  "%.2f", left);
+        telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
     }
 

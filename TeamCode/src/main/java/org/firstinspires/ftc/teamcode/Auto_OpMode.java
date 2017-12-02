@@ -35,7 +35,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -43,18 +42,17 @@ import com.qualcomm.robotcore.util.Range;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
  * It includes all the skeletal structure that all iterative OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="ArmMotion", group="Iterative Opmode")
+@TeleOp(name = "ArmMotion", group = "Iterative Opmode")
 @Disabled
-public class Auto_OpMode extends OpMode
-{
+public class Auto_OpMode extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor armMotion = null;
@@ -105,14 +103,14 @@ public class Auto_OpMode extends OpMode
      */
     @Override
     public void loop() {
-        if (true){
+        if (true) {
             grabMotion1.setPosition(0.25);
             grabMotion2.setPosition(0.25);
-        } else
-        if (false){
+        } else if (false) {
             grabMotion1.setPosition(0);
             grabMotion2.setPosition(0);
-        } else{}
+        } else {
+        }
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "Arm motion, Grab motion", armMotion, grabMotion1);
     }
