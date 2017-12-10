@@ -15,20 +15,25 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "Blue Team Auto Mode", group = "Linear Opmode")
+@Autonomous(name = "Blue Team Auto Mode 2", group = "Linear Opmode")
 //@Disabled
-public class Blue1_Auto_Mode extends LinearOpMode {
+public class Blue2_Auto_Mode extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();
-    //public static final String TAG = "Vuforia VuMark Sample";
 
-    //OpenGLMatrix lastLocation = null;
+    // TODO: VuMark stuff
+    /*
+    public static final String TAG = "Vuforia VuMark Sample";
+
+    OpenGLMatrix lastLocation = null;
+    */
 
     /**
      * {@link} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
     //VuforiaLocalizer vuforia;
+
 
 
 
@@ -107,10 +112,11 @@ public class Blue1_Auto_Mode extends LinearOpMode {
 
         int count = 0;
 
+        // TODO: Vuforia stuff
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
-         */
+
         //int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -145,10 +151,11 @@ public class Blue1_Auto_Mode extends LinearOpMode {
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
+        /*
         //VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         //VuforiaTrackable relicTemplate = relicTrackables.get(0);
         //relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-
+        */
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -279,9 +286,14 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                 telemetry.addData("Color Detected", color);
                 telemetry.update();
 
-                forward(-2, 0.5);
-                turn(0,1, 0.5);
-                forward(-1,0.5);
+                forward(-2,0.5);
+                turn(0,1,0.5);
+                forward(1,0.5);
+                turn(0,1,0.5);
+                forward(0.5,0.5);
+
+                robot.leftClaw.setPosition(robot.LEFT_MID_SERVO + robot.MAX_CLAW_OFFSET);
+                robot.rightClaw.setPosition(robot.RIGHT_MID_SERVO - robot.MAX_CLAW_OFFSET);
 
                 sleep(5000);
                 count += 1;

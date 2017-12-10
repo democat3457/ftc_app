@@ -15,11 +15,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "Blue Team Auto Mode", group = "Linear Opmode")
+@Autonomous(name = "Red Team Auto Mode 2", group = "Linear Opmode")
 //@Disabled
-public class Blue1_Auto_Mode extends LinearOpMode {
+public class Red2_Auto_Mode extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();
+
     //public static final String TAG = "Vuforia VuMark Sample";
 
     //OpenGLMatrix lastLocation = null;
@@ -84,6 +85,9 @@ public class Blue1_Auto_Mode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        int count = 0;
+
         /*
         // get a reference to the color sensor.
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
@@ -105,7 +109,8 @@ public class Blue1_Auto_Mode extends LinearOpMode {
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        int count = 0;
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
 
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
@@ -129,7 +134,7 @@ public class Blue1_Auto_Mode extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code onthe next line, between the double quotes.
          */
-        //parameters.vuforiaLicenseKey = "AUzwlmf/////AAAAGeF4fSfKj0E/sO0hGm4OxLlklqv9XKWdCvCrqpCCorEeqIADLYyvs7tJkvKgL8R7HQ01gUBiA4oF/kqDjRADZOVXUqPN8RLQtERPIkWxE9T1AKHOw5WuV3N8T5j2eMbjyoZbklh5jDILSWiDS3gZRKV5zHTxxi3508j9GfvzAexl+4kOznoXN8fWfiPcTMUmPGp4yERKhbAmksRlTggK83mFxfyc4yB1zNptmSvJ9JP3FqhYxfjtnelYPDQwmQMjDd+P6GNQgZpt79wlYqlvOFmOdcs85WTbrItBpxc6yHLxKJTHclzuTKYpSxErgEOsfQ8vWJrSHmknv+N6wv161rFw5lrz2j2X4/mrS37X00Aj";
+       // parameters.vuforiaLicenseKey = "AUzwlmf/////AAAAGeF4fSfKj0E/sO0hGm4OxLlklqv9XKWdCvCrqpCCorEeqIADLYyvs7tJkvKgL8R7HQ01gUBiA4oF/kqDjRADZOVXUqPN8RLQtERPIkWxE9T1AKHOw5WuV3N8T5j2eMbjyoZbklh5jDILSWiDS3gZRKV5zHTxxi3508j9GfvzAexl+4kOznoXN8fWfiPcTMUmPGp4yERKhbAmksRlTggK83mFxfyc4yB1zNptmSvJ9JP3FqhYxfjtnelYPDQwmQMjDd+P6GNQgZpt79wlYqlvOFmOdcs85WTbrItBpxc6yHLxKJTHclzuTKYpSxErgEOsfQ8vWJrSHmknv+N6wv161rFw5lrz2j2X4/mrS37X00Aj";
 
         /*
          * We also indicate which camera on the RC that we wish to use.
@@ -150,20 +155,13 @@ public class Blue1_Auto_Mode extends LinearOpMode {
         //relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
 
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-
         robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
         double jewelArmPosition = robot.JEWEL_UP_LIMIT;
 
         waitForStart();
         runtime.reset();
 
-        //relicTrackables.activate();
-
         while (opModeIsActive()) {
-
             /**
              * See if any of the instances of {@link relicTemplate} are currently visible.
              * {@link RelicRecoveryVuMark} is an enum which can have the following values:
@@ -176,7 +174,7 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-                //telemetry.addData("VuMark", "%s visible", vuMark);
+//                telemetry.addData("VuMark", "%s visible", vuMark);
 
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
@@ -201,11 +199,11 @@ public class Blue1_Auto_Mode extends LinearOpMode {
 //                    double rY = rot.secondAngle;
 //                    double rZ = rot.thirdAngle;
 //                }
-            //} else {
-                //telemetry.addData("VuMark", "not visible");
-            //}
+//            } else {
+ //               telemetry.addData("VuMark", "not visible");
+   //         }
 
-            //telemetry.update();
+     //       telemetry.update();
 
             if (count < 1) {
                 telemetry.addData("Status", "About to set arm to down pos");
@@ -220,32 +218,28 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                 }
 
                 sleep(1000);
-//                telemetry.addData("Status", "About to move jewel");
-//                telemetry.update();
+                telemetry.addData("Status", "About to move jewel");
+                telemetry.update();
                 String color = "";
-                double alpha = robot.sensorColor.alpha();
-                double red = robot.sensorColor.red();
-                double blue = robot.sensorColor.blue();
-                double green = robot.sensorColor.green();
                 if (robot.sensorColor.red() < 25) {
                     color = "";
                 } else if (robot.sensorColor.blue() < 25) {
                     color = "";
-                } else if (robot.sensorColor.red() < robot.sensorColor.blue()) {
+                } else if (robot.sensorColor.red() > robot.sensorColor.blue()) {
                     // moving forward to knock off the jewel
-//                    telemetry.addData("Status", "About to move forward");
-//                    telemetry.update();
+                    telemetry.addData("Status", "About to move forward");
+                    telemetry.update();
                     forward(0.35, 0.10);
                     color = "red";
-                } else if (robot.sensorColor.red() > robot.sensorColor.blue()) {
-                    // moving backward to knock off the jewel
-//                    telemetry.addData("Status", "About to move backward");
-//                    telemetry.update();
+                } else if (robot.sensorColor.red() < robot.sensorColor.blue()) {
+                    // moving backwards to knock off the jewel
+                    telemetry.addData("Status", "About to move backward");
+                    telemetry.update();
                     forward(-0.35, 0.10);
                     color = "blue";
                 }
-//                telemetry.addData("Status", "About to set arm to up pos");
-//                telemetry.update();
+                telemetry.addData("Status", "About to set arm to up pos");
+                telemetry.update();
                 // move jewel arm to up position
                 telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
                 telemetry.update();
@@ -265,25 +259,26 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                 }
 
                 // prints current run time to the screen
-//                telemetry.addData("Status", "Run Time: ", runtime.toString());
+                telemetry.addData("Status", "Run Time: ", runtime.toString());
                 sleep(2000);
 
 //        telemetry.addData("Distance (cm)",
 //                String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
 
 
-                telemetry.addData("Alpha", alpha);
-                telemetry.addData("Red  ", red);
-                telemetry.addData("Green", green);
-                telemetry.addData("Blue ", blue);
+                telemetry.addData("Alpha", robot.sensorColor.alpha());
+                telemetry.addData("Red  ", robot.sensorColor.red());
+                telemetry.addData("Green", robot.sensorColor.green());
+                telemetry.addData("Blue ", robot.sensorColor.blue());
                 telemetry.addData("Color Detected", color);
                 telemetry.update();
 
-                forward(-2, 0.5);
+                forward(1, 0.5);
+                turn(1, 0, 0.5);
+                forward(1,0.5);
                 turn(0,1, 0.5);
-                forward(-1,0.5);
-
-                sleep(5000);
+                forward(1,0.5);
+                sleep(7000);
                 count += 1;
             }
         }

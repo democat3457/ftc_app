@@ -50,15 +50,15 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Four Wheels Teleop", group = "Pushbot")
+@TeleOp(name = "Three Wheels Teleop", group = "Pushbot")
 //@Disabled
-public class Main_Teleop_Mode extends OpMode {
+public class Alt_Teleop_Mode extends OpMode {
 
     final double CLAW_SPEED = 0.01;                 // sets rate to move servo
     /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot();  // use the class created to define a Pushbot's hardware
+    HardwarePushbot robot = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
-    double clawOffset = 0;                          // Servo mid position
+    double clawOffset = 0;                  // Servo mid position
     private ElapsedTime runtime = new ElapsedTime();
     //int upTargPos = 1600; //upwards bound of the encoder for the arm
     //int downTargPos = -50; // lower bound of the encoder for the arm
@@ -146,28 +146,35 @@ public class Main_Teleop_Mode extends OpMode {
         robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
         robot.sensorColor.enableLed(false);
 
-        double left;
-        double right;
+        double forward;
+        double lr;
 
         // dead zone
-        if (Math.abs(gamepad1.right_stick_y) < 0.125) {
-            left = 0;
+        if (Math.abs(gamepad1.left_stick_y) < 0.2){
+            forward = 0;
         } else {
-            left = gamepad1.right_stick_y;
+            forward = -gamepad1.left_stick_y;
         }
-        if (Math.abs(gamepad1.left_stick_y) < 0.125) {
-            right = 0;
+        if (Math.abs(gamepad1.left_stick_x) < 0.2){
+            lr = 0;
         } else {
-            right = gamepad1.left_stick_y;
+            lr = -gamepad1.left_stick_x;
         }
 
-        // debug info for chassis movement
-        telemetry.addData("Wheels", "left motor", robot.leftDrive.getPower());
-        telemetry.addData("Wheels", "right motor", robot.rightDrive.getPower());
 
         // chassis movement
-        robot.leftDrive.setPower(left);
-        robot.rightDrive.setPower(right);
+        robot.leftDrive.setPower(forward);
+        robot.rightDrive.setPower(forward);
+        robot.thirdWheel.setPower(lr);
+
+        if (gamepad1.x){
+            robot.leftDrive.setPower(-0.3);
+            robot.rightDrive.setPower(0.3);
+        }
+        if (gamepad1.b){
+            robot.leftDrive.setPower(0.3);
+            robot.rightDrive.setPower(-0.3);
+        }
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad2.right_bumper) {
@@ -175,6 +182,7 @@ public class Main_Teleop_Mode extends OpMode {
         } else if (gamepad2.left_bumper) {
             clawOffset -= CLAW_SPEED;
         }
+
 
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
@@ -213,17 +221,18 @@ public class Main_Teleop_Mode extends OpMode {
         */
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
+        /*
         if (gamepad2.y) {
             robot.leftArm.setPower(robot.ARM_UP_POWER);
         } else if (gamepad2.a) {
             robot.leftArm.setPower(robot.ARM_DOWN_POWER);
         } else {
             robot.leftArm.setPower(0.0);
-        }
+        }\*/
         // Send telemetry message to signify robot running;
 
-        telemetry.addData("left", "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        telemetry.addData("left", "%.2f", robot.leftDrive.getPower());
+        telemetry.addData("right", "%.2f", robot.rightDrive.getPower());
     }
 
     /*
