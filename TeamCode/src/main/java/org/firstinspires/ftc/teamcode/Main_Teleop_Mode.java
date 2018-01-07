@@ -110,7 +110,8 @@ public class Main_Teleop_Mode extends OpMode {
         robot.init(hardwareMap);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftArm.setPower(1);
 
         // debug info for claw
         telemetry.addData("claw", "Claw Offset = %.2f", clawOffset);

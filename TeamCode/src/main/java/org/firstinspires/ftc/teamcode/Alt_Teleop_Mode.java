@@ -62,42 +62,35 @@ public class Alt_Teleop_Mode extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     //int upTargPos = 1600; //upwards bound of the encoder for the arm
     //int downTargPos = -50; // lower bound of the encoder for the arm
-    //static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
-    //static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
-    //static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    //static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-    // (WHEEL_DIAMETER_INCHES * 3.1415);
-    //static final double     DRIVE_SPEED             = 0.6;
-    //static final double     TURN_SPEED              = 0.5;
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+     (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
 
-    /*public void driveLine (double speed, double inches){
-        int startPos = robot.leftArm.getCurrentPosition();
-        robot.leftArm.setPower(speed);
-        while (Math.abs(robot.leftArm.getCurrentPosition()-startPos)<=(int)(inches*(1120/4))){
+    public void encoderArm (double speed, double inches, double timeoutS){
+        int newArmTarget;
 
-            telemetry.update();
+        newArmTarget = robot.leftArm.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
 
+        robot.leftArm.setTargetPosition(newArmTarget);
+
+        robot.leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        runtime.reset();
+        robot.leftArm.setPower(Math.abs(speed));
+
+        while ((runtime.seconds() < timeoutS) && robot.leftArm.isBusy()){
+            telemetry.addData("Path1", "Running to %7d", newArmTarget);
+            telemetry.addData("Path2", "Running at %7d", robot.leftArm.getCurrentPosition());
         }
+
         robot.leftArm.setPower(0);
 
-
-
-
+        robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-    */
-    /*
-    public void linearSlide(double speed, double inches){
-        robot.leftArm.setPower(speed);
-        robot.leftArm.setTargetPosition((int)inches*1120/4);
-
-        while (robot.leftArm.isBusy()){
-            telemetry.update();
-        }
-        sleep(200);
-
-
-    }
-    */
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -110,14 +103,19 @@ public class Alt_Teleop_Mode extends OpMode {
         robot.init(hardwareMap);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        robot.leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // debug info for claw
         telemetry.addData("claw", "Claw Offset = %.2f", clawOffset);
         telemetry.addData("left claw", robot.leftClaw.getPosition());
         telemetry.addData("right claw", robot.rightClaw.getPosition());
-        telemetry.addData("Say", "Hello, Driver!");    //
-        //robot.leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addData("Say", "Hello, Driver!");
+
+        telemetry.addData("Path0", "Starting at %7d", robot.leftArm.getCurrentPosition());
+
+
 
     }
 
@@ -141,40 +139,45 @@ public class Alt_Teleop_Mode extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("Encoder Value: ", robot.leftArm.getCurrentPosition());
+        telemetry.update();
 
         // keeps jewel arm upright
         robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
         robot.sensorColor.enableLed(false);
+        robot.sensorColor.close();
 
         double forward;
-        double lr;
+        double lr = 0;
+
+        /*if (robot.sensorTouch.isPressed()){
+            robot.leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftArm.setPower(0);
+        }*/
 
         // dead zone
-        if (Math.abs(gamepad1.left_stick_y) < 0.2){
-            forward = 0;
-        } else {
             forward = -gamepad1.left_stick_y;
-        }
-        if (Math.abs(gamepad1.left_stick_x) < 0.2){
-            lr = 0;
-        } else {
-            lr = -gamepad1.left_stick_x;
-        }
 
+        if (gamepad1.dpad_left){
+            lr = 1;
+        } else if (gamepad1.dpad_right) {
+            lr = -1;
+        }
 
         // chassis movement
-        robot.leftDrive.setPower(forward);
-        robot.rightDrive.setPower(forward);
+        robot.leftDrive.setPower(forward-gamepad1.right_stick_x);
+        robot.rightDrive.setPower(forward+gamepad1.right_stick_x);
         robot.thirdWheel.setPower(lr);
 
-        if (gamepad1.x){
-            robot.leftDrive.setPower(-0.3);
-            robot.rightDrive.setPower(0.3);
+        /*if (gamepad1.x){
+            robot.leftDrive.setPower(-1);
+            robot.rightDrive.setPower(1);
         }
         if (gamepad1.b){
-            robot.leftDrive.setPower(0.3);
-            robot.rightDrive.setPower(-0.3);
-        }
+            robot.leftDrive.setPower(1);
+            robot.rightDrive.setPower(-1);
+        } */
+
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad2.right_bumper) {
@@ -194,6 +197,7 @@ public class Alt_Teleop_Mode extends OpMode {
         telemetry.addData("claw", "Claw Offset = %.2f", clawOffset);
         telemetry.addData("left claw", robot.leftClaw.getPosition());
         telemetry.addData("right claw", robot.rightClaw.getPosition());
+        telemetry.update();
 
         // arm movement with encoder
         /*
@@ -221,18 +225,24 @@ public class Alt_Teleop_Mode extends OpMode {
         */
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
-        /*
+
         if (gamepad2.y) {
+            robot.leftArm.setTargetPosition(800);
             robot.leftArm.setPower(robot.ARM_UP_POWER);
         } else if (gamepad2.a) {
+            robot.leftArm.setTargetPosition(0);
             robot.leftArm.setPower(robot.ARM_DOWN_POWER);
         } else {
-            robot.leftArm.setPower(0.0);
-        }\*/
+            robot.leftArm.setPower(0);
+        }
+        telemetry.addData("Arm value", robot.leftArm.getCurrentPosition());
+        telemetry.update();
         // Send telemetry message to signify robot running;
 
         telemetry.addData("left", "%.2f", robot.leftDrive.getPower());
         telemetry.addData("right", "%.2f", robot.rightDrive.getPower());
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
     }
 
     /*

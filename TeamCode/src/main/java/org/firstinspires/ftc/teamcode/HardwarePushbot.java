@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -72,7 +73,8 @@ public class HardwarePushbot {
     public Servo jewelServo = null;
     public ColorSensor sensorColor = null;
     public DistanceSensor sensorDistance = null;
-    //    public static final double LEFT_CLAW_MIN   =  0.23 ;
+//    public TouchSensor sensorTouch = null;
+//    public static final double LEFT_CLAW_MIN   =  0.23 ;
 //    public static final double LEFT_CLAW_MAX   =  0.35 ;
 //    public static final double RIGHT_CLAW_MIN  =  0.5  ;
 //    public static final double RIGHT_CLAW_MAX  =  0.62 ;
@@ -109,7 +111,7 @@ public class HardwarePushbot {
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         thirdWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
@@ -122,6 +124,6 @@ public class HardwarePushbot {
 
         sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
-
+//        sensorTouch = hwMap.get(TouchSensor.class, "sensor_touch");
     }
 }
