@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -51,52 +50,47 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Four Wheels", group = "Pushbot")
-@Disabled
-public class Main_Teleop_Mode extends OpMode {
+@TeleOp(name = "Three Wheels Tank", group = "Pushbot")
+//@Disabled
+public class Alt_Teleop_Mode_Tank extends OpMode {
 
-    final double CLAW_SPEED = 0.01;                 // sets rate to move servo
-    /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot();  // use the class created to define a Pushbot's hardware
-    // could also use HardwarePushbotMatrix class.
-    double clawOffset = 0;                          // Servo mid position
-    private ElapsedTime runtime = new ElapsedTime();
     //int upTargPos = 1600; //upwards bound of the encoder for the arm
     //int downTargPos = -50; // lower bound of the encoder for the arm
-    //static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
-    //static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
-    //static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    //static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-    // (WHEEL_DIAMETER_INCHES * 3.1415);
-    //static final double     DRIVE_SPEED             = 0.6;
-    //static final double     TURN_SPEED              = 0.5;
+    static final double COUNTS_PER_MOTOR_REV = 1120;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 4.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
+    final double CLAW_SPEED = 0.01;                 // sets rate to move servo
+    /* Declare OpMode members. */
+    HardwarePushbot robot = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+    // could also use HardwarePushbotMatrix class.
+    double clawOffset = 0;                  // Servo mid position
+    private ElapsedTime runtime = new ElapsedTime();
 
-    /*public void driveLine (double speed, double inches){
-        int startPos = robot.leftArm.getCurrentPosition();
-        robot.leftArm.setPower(speed);
-        while (Math.abs(robot.leftArm.getCurrentPosition()-startPos)<=(int)(inches*(1120/4))){
+    /*
+    public void encoderArm (double speed, double inches, double timeoutS){
+        int newArmTarget;
 
-            telemetry.update();
+        newArmTarget = robot.leftArm.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
 
+        robot.leftArm.setTargetPosition(newArmTarget);
+
+        robot.leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        runtime.reset();
+        robot.leftArm.setPower(Math.abs(speed));
+
+        while ((runtime.seconds() < timeoutS) && robot.leftArm.isBusy()){
+            telemetry.addData("Path1", "Running to %7d", newArmTarget);
+            telemetry.addData("Path2", "Running at %7d", robot.leftArm.getCurrentPosition());
         }
+
         robot.leftArm.setPower(0);
 
-
-
-
-    }
-    */
-    /*
-    public void linearSlide(double speed, double inches){
-        robot.leftArm.setPower(speed);
-        robot.leftArm.setTargetPosition((int)inches*1120/4);
-
-        while (robot.leftArm.isBusy()){
-            telemetry.update();
-        }
-        sleep(200);
-
-
+        robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     */
 
@@ -116,8 +110,7 @@ public class Main_Teleop_Mode extends OpMode {
         telemetry.addData("claw", "Claw Offset = %.2f", clawOffset);
         telemetry.addData("left claw", robot.leftClaw.getPosition());
         telemetry.addData("right claw", robot.rightClaw.getPosition());
-        telemetry.addData("Say", "Hello, Driver!");    //
-        //robot.leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addData("Say", "Hello, Driver!");
 
     }
 
@@ -145,28 +138,34 @@ public class Main_Teleop_Mode extends OpMode {
 //        robot.sensorColor.enableLed(false);
 //        robot.sensorColor.close();
 
-        double left;
-        double right;
+        double lr = 0;
 
-        // dead zone
-        if (Math.abs(gamepad1.right_stick_y) < 0.125) {
-            left = 0;
-        } else {
-            left = gamepad1.right_stick_y;
-        }
-        if (Math.abs(gamepad1.left_stick_y) < 0.125) {
-            right = 0;
-        } else {
-            right = gamepad1.left_stick_y;
-        }
+        /*if (robot.sensorTouch.isPressed()){
+            robot.leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftArm.setPower(0);
+        }*/
 
-        // debug info for chassis movement
-        telemetry.addData("Wheels", "left motor", robot.leftDrive.getPower());
-        telemetry.addData("Wheels", "right motor", robot.rightDrive.getPower());
+        if (gamepad1.dpad_left) {
+            lr = 1;
+        } else if (gamepad1.dpad_right) {
+            lr = -1;
+        }
 
         // chassis movement
-        robot.leftDrive.setPower(left);
-        robot.rightDrive.setPower(right);
+        robot.leftDrive.setPower(-gamepad1.left_stick_y);
+        robot.rightDrive.setPower(-gamepad1.right_stick_y);
+        robot.thirdWheel.setPower(lr);
+
+        /*if (gamepad1.x){
+            robot.leftDrive.setPower(-1);
+            robot.rightDrive.setPower(1);
+        }
+        if (gamepad1.b){
+            robot.leftDrive.setPower(1);
+            robot.rightDrive.setPower(-1);
+        } */
+
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad2.right_bumper) {
@@ -185,6 +184,7 @@ public class Main_Teleop_Mode extends OpMode {
         telemetry.addData("claw", "Claw Offset = %.2f", clawOffset);
         telemetry.addData("left claw", robot.leftClaw.getPosition());
         telemetry.addData("right claw", robot.rightClaw.getPosition());
+        telemetry.update();
 
         // arm movement with encoder
         /*
@@ -212,16 +212,20 @@ public class Main_Teleop_Mode extends OpMode {
         */
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
+
         if (gamepad2.y) {
             robot.leftArm.setPosition(robot.leftArm.getPosition() + robot.ARM_SPEED);
         } else if (gamepad2.a) {
             robot.leftArm.setPosition(robot.leftArm.getPosition() - robot.ARM_SPEED);
         } else {
         }
+
         // Send telemetry message to signify robot running;
 
-        telemetry.addData("left", "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        telemetry.addData("left", "%.2f", robot.leftDrive.getPower());
+        telemetry.addData("right", "%.2f", robot.rightDrive.getPower());
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
     }
 
     /*

@@ -31,11 +31,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -54,26 +52,26 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
+
 public class HardwarePushbot {
-    public static final double LEFT_MID_SERVO = 0.27;
-    public static final double RIGHT_MID_SERVO = 0.56;
-    public static final double MAX_CLAW_OFFSET = 0.09;
-    public static final double ARM_UP_POWER = 0.45;
-    public static final double ARM_DOWN_POWER = -0.45;
+    public static final double LEFT_MID_SERVO = 0.325;
+    public static final double RIGHT_MID_SERVO = 0.525;
+    public static final double MAX_CLAW_OFFSET = 0.025;
+    public static final double ARM_SPEED = 0.1;
     public static final double JEWEL_UP_LIMIT = 0.48;
     public static final double JEWEL_DOWN_LIMIT = -0.05;
     public static final double JEWEL_ARM_SPEED = 0.05;
     /* Public OpMode members. */
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
-    public DcMotor leftArm = null;
     public DcMotor thirdWheel = null;
+    public Servo leftArm = null;
     public Servo leftClaw = null;
     public Servo rightClaw = null;
     public Servo jewelServo = null;
     public ColorSensor sensorColor = null;
     public DistanceSensor sensorDistance = null;
-//    public TouchSensor sensorTouch = null;
+    //    public TouchSensor sensorTouch = null;
 //    public static final double LEFT_CLAW_MIN   =  0.23 ;
 //    public static final double LEFT_CLAW_MAX   =  0.35 ;
 //    public static final double RIGHT_CLAW_MIN  =  0.5  ;
@@ -95,7 +93,6 @@ public class HardwarePushbot {
         // Define and Initialize Motors
         leftDrive = hwMap.get(DcMotor.class, "right_drive");
         rightDrive = hwMap.get(DcMotor.class, "left_drive");
-        leftArm = hwMap.get(DcMotor.class, "left_arm");
         thirdWheel = hwMap.get(DcMotor.class, "third_wheel");
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -104,23 +101,23 @@ public class HardwarePushbot {
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        leftArm.setPower(0);
         thirdWheel.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         thirdWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
         leftClaw = hwMap.get(Servo.class, "left_hand");
         rightClaw = hwMap.get(Servo.class, "right_hand");
         jewelServo = hwMap.get(Servo.class, "jewel_arm");
+        leftArm = hwMap.get(Servo.class, "left_arm");
         leftClaw.setPosition(LEFT_MID_SERVO);
         rightClaw.setPosition(RIGHT_MID_SERVO);
         jewelServo.setPosition(0.48);
+        leftArm.setPosition(0);
 
         sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
