@@ -217,15 +217,15 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                     sleep(1000);
 //                telemetry.addData("Status", "About to move jewel");
 //                telemetry.update();
-                    double alpha = robot.sensorColor.alpha();
+//                    double alpha = robot.sensorColor.alpha();
                     double red = robot.sensorColor.red();
                     double blue = robot.sensorColor.blue();
-                    double green = robot.sensorColor.green();
-                    if (robot.sensorColor.red() > robot.sensorColor.blue()) {
+//                    double green = robot.sensorColor.green();
+                    if (red > blue) {
 //                    telemetry.addData("Status", "About to move forward");
 //                    telemetry.update();
                         colors[i] = 'R';
-                    } else if (robot.sensorColor.red() < robot.sensorColor.blue()) {
+                    } else if (red < blue) {
                         // moving backward to knock off the jewel
 //                    telemetry.addData("Status", "About to move backward");
 //                    telemetry.update();
@@ -244,7 +244,7 @@ public class Blue1_Auto_Mode extends LinearOpMode {
 //                    telemetry.update();
 //                    sleep(50);
 //                }
-                sleep(1000);
+                sleep(200);
                 int move = 0;
                 if (colors[0]=='R'&&colors[1]=='R'&&colors[2]=='R'){
                     move = -1;
@@ -252,14 +252,14 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                     move = 1;
                 }
                 if (move == -1) {
-                    forward(-0.45, 0.1);
+                    forward(-0.45, 0.5);
 
                 } else if (move == 1) {
-                    forward(0.45, 0.1);
+                    forward(0.45, 0.5);
                 }
+                sleep(1000);
                 robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
-                String colorsString= new String(colors);
-                telemetry.addData("Detected colors: ",colorsString);
+                telemetry.addData("Detected colors: ",String.valueOf(colors));
                 telemetry.update();
 
                 // prints current run time to the screen
@@ -274,7 +274,7 @@ public class Blue1_Auto_Mode extends LinearOpMode {
 //                telemetry.addData("Red  ", red);
 //                telemetry.addData("Green", green);
 //                telemetry.addData("Blue ", blue);
-                telemetry.update();
+//                telemetry.update();
 //
 //                forward(-2, 0.5);
 //                turn(0, 1, 0.5);
