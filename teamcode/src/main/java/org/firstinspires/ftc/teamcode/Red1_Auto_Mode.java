@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.sun.tools.javac.util.Constants.format;
 
-@Autonomous(name = "Red Team Auto Mode 1", group = "Linear Opmode")
+@Autonomous(name = "We are RED Team", group = "Autonomous")
 //@Disabled
 public class Red1_Auto_Mode extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample";
@@ -147,9 +147,7 @@ public class Red1_Auto_Mode extends LinearOpMode {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-
         robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
-        double jewelArmPosition = robot.JEWEL_UP_LIMIT;
 
         waitForStart();
         runtime.reset();
@@ -200,78 +198,89 @@ public class Red1_Auto_Mode extends LinearOpMode {
             telemetry.update();
 
             if (count < 1) {
-                telemetry.addData("Status", "About to set arm to down pos");
-                telemetry.update();
-                // move jewel arm to down position
-                while (jewelArmPosition >= robot.JEWEL_DOWN_LIMIT) {
-                    jewelArmPosition = jewelArmPosition - robot.JEWEL_ARM_SPEED;
-                    robot.jewelServo.setPosition(jewelArmPosition);
-                    telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
-                    telemetry.update();
-                    sleep(50);
-                }
+//                telemetry.addData("Status", "About to set arm to down pos");
+//                telemetry.update();
 
-                sleep(1000);
-                telemetry.addData("Status", "About to move jewel");
-                telemetry.update();
-                String color = "";
-                if (robot.sensorColor.red() < 25) {
-                    color = "";
-                } else if (robot.sensorColor.blue() < 25) {
-                    color = "";
-                } else if (robot.sensorColor.red() > robot.sensorColor.blue()) {
-                    // moving forward to knock off the jewel
-                    telemetry.addData("Status", "About to move forward");
-                    telemetry.update();
-                    forward(0.35, 0.10);
-                    color = "red";
-                } else if (robot.sensorColor.red() < robot.sensorColor.blue()) {
-                    // moving backwards to knock off the jewel
-                    telemetry.addData("Status", "About to move backward");
-                    telemetry.update();
-                    forward(-0.35, 0.10);
-                    color = "blue";
+                char[] colors = new char[3];
+                for (int i=0;i<3;i++) {
+//                    while (jewelArmPosition >= robot.JEWEL_DOWN_LIMIT) {
+//                        jewelArmPosition = jewelArmPosition - robot.JEWEL_ARM_SPEED;
+//                        robot.jewelServo.setPosition(jewelArmPosition);
+//                        telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
+//                        telemetry.update();
+//                        sleep(50);
+//                    }
+                    robot.jewelServo.setPosition(robot.JEWEL_STOPS[i]);
+
+                    sleep(1000);
+//                telemetry.addData("Status", "About to move jewel");
+//                telemetry.update();
+                    double alpha = robot.sensorColor.alpha();
+                    double red = robot.sensorColor.red();
+                    double blue = robot.sensorColor.blue();
+                    double green = robot.sensorColor.green();
+                    if (robot.sensorColor.red() > robot.sensorColor.blue()) {
+//                    telemetry.addData("Status", "About to move forward");
+//                    telemetry.update();
+                        colors[i] = 'R';
+                    } else if (robot.sensorColor.red() < robot.sensorColor.blue()) {
+                        // moving backward to knock off the jewel
+//                    telemetry.addData("Status", "About to move backward");
+//                    telemetry.update();
+                        colors[i] = 'B';
+                    }
+//                telemetry.addData("Status", "About to set arm to up pos");
+//                telemetry.update();
+                    // move jewel arm to up position
+//                telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
+//                telemetry.update();
                 }
-                telemetry.addData("Status", "About to set arm to up pos");
-                telemetry.update();
-                // move jewel arm to up position
-                telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
-                telemetry.update();
-                while (jewelArmPosition <= robot.JEWEL_UP_LIMIT) {
-                    jewelArmPosition = jewelArmPosition + robot.JEWEL_ARM_SPEED;
-                    robot.jewelServo.setPosition(jewelArmPosition);
-                    telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
-                    telemetry.update();
-                    sleep(50);
-                }
+//                while (jewelArmPosition <= robot.JEWEL_UP_LIMIT) {
+//                    jewelArmPosition = jewelArmPosition + robot.JEWEL_ARM_SPEED;
+//                    robot.jewelServo.setPosition(jewelArmPosition);
+//                    telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
+//                    telemetry.update();
+//                    sleep(50);
+//                }
                 sleep(1000);
-                if (color.equals("red")) {
+                int move = 0;
+                if (colors[0]=='R'&&colors[1]=='R'&&colors[2]=='R'){
+                    move = 1;
+                } else if (colors[0]=='B'&&colors[1]=='B'&&colors[2]=='B'){
+                    move = -1;
+                }
+                if (move == -1) {
                     forward(-0.45, 0.1);
 
-                } else if (color.equals("blue")) {
+                } else if (move == 1) {
                     forward(0.45, 0.1);
                 }
+                robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
+                telemetry.addData("Detected",colors);
+                telemetry.update();
 
                 // prints current run time to the screen
-                telemetry.addData("Status", "Run Time: ", runtime.toString());
+//                telemetry.addData("Status", "Run Time: ", runtime.toString());
                 sleep(2000);
 
 //        telemetry.addData("Distance (cm)",
 //                String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
 
 
-                telemetry.addData("Alpha", robot.sensorColor.alpha());
-                telemetry.addData("Red  ", robot.sensorColor.red());
-                telemetry.addData("Green", robot.sensorColor.green());
-                telemetry.addData("Blue ", robot.sensorColor.blue());
-                telemetry.addData("Color Detected", color);
+//                telemetry.addData("Alpha", alpha);
+//                telemetry.addData("Red  ", red);
+//                telemetry.addData("Green", green);
+//                telemetry.addData("Blue ", blue);
                 telemetry.update();
+//
+//                forward(-2, 0.5);
+//                turn(0, 1, 0.5);
+//                forward(-1, 0.5);
+//
+//                robot.leftClaw.setPosition(robot.LEFT_MID_SERVO + robot.MAX_CLAW_OFFSET);
+//                robot.rightClaw.setPosition(robot.RIGHT_MID_SERVO - robot.MAX_CLAW_OFFSET);
 
-                forward(2, 0.5);
-                turn(0, 1, 0.5);
-                forward(1, 0.5);
-
-                sleep(7000);
+                sleep(5000);
                 count += 1;
             }
         }

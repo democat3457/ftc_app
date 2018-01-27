@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Three Wheels Tank", group = "Pushbot")
+@TeleOp(name = "Three Wheels Tank", group = "TeleOp")
 //@Disabled
 public class Alt_Teleop_Mode_Tank extends OpMode {
 
@@ -135,8 +135,8 @@ public class Alt_Teleop_Mode_Tank extends OpMode {
     public void loop() {
         // keeps jewel arm upright
         robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
-//        robot.sensorColor.enableLed(false);
-//        robot.sensorColor.close();
+        robot.sensorColor.enableLed(false);
+        robot.sensorColor.close();
 
         double lr = 0;
 
@@ -214,9 +214,17 @@ public class Alt_Teleop_Mode_Tank extends OpMode {
         // Use gamepad buttons to move the arm up (Y) and down (A)
 
         if (gamepad2.y) {
-            robot.leftArm.setPosition(robot.leftArm.getPosition() + robot.ARM_SPEED);
+            robot.armUp();
+            telemetry.addData("leftArm position", robot.leftArm.getPosition());
+            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+
+            telemetry.update();
         } else if (gamepad2.a) {
-            robot.leftArm.setPosition(robot.leftArm.getPosition() - robot.ARM_SPEED);
+            robot.armDown();
+            telemetry.addData("leftArm position", robot.leftArm.getPosition());
+            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+
+            telemetry.update();
         } else {
         }
 
