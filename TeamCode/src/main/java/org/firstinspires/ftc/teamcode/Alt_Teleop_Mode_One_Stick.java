@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -50,8 +51,8 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Three Wheels One Stick", group = "Pushbot")
-//@Disabled
+@TeleOp(name = "Three Wheels One Stick", group = "TeleOp")
+@Disabled
 public class Alt_Teleop_Mode_One_Stick extends OpMode {
 
     //int upTargPos = 1600; //upwards bound of the encoder for the arm
@@ -135,8 +136,8 @@ public class Alt_Teleop_Mode_One_Stick extends OpMode {
     public void loop() {
         // keeps jewel arm upright
         robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
-//        robot.sensorColor.enableLed(false);
-//        robot.sensorColor.close();
+        robot.sensorColor.enableLed(false);
+        robot.sensorColor.close();
 
         double forward;
         double lr = 0;
@@ -148,11 +149,11 @@ public class Alt_Teleop_Mode_One_Stick extends OpMode {
         }*/
 
         forward = -gamepad1.left_stick_y;
-        lr = gamepad1.left_stick_x;
+        lr = (gamepad1.left_stick_x)/2;
 
         // chassis movement
-        robot.leftDrive.setPower(Range.clip(-1, 1, forward + gamepad1.right_stick_x));
-        robot.rightDrive.setPower(Range.clip(-1, 1, forward - gamepad1.right_stick_x));
+        robot.leftDrive.setPower(Range.clip(forward + gamepad1.right_stick_x, -1, 1));
+        robot.rightDrive.setPower(Range.clip(forward - gamepad1.right_stick_x,-1, 1));
         robot.thirdWheel.setPower(lr);
 
         /*if (gamepad1.x){
@@ -212,9 +213,19 @@ public class Alt_Teleop_Mode_One_Stick extends OpMode {
         // Use gamepad buttons to move the arm up (Y) and down (A)
 
         if (gamepad2.y) {
-            robot.leftArm.setPosition(robot.leftArm.getPosition() + robot.ARM_SPEED);
+            robot.armUp();
+            telemetry.addData("leftArm position", robot.leftArm.getPosition());
+            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+
+            telemetry.update();
+
         } else if (gamepad2.a) {
-            robot.leftArm.setPosition(robot.leftArm.getPosition() - robot.ARM_SPEED);
+            robot.armDown();
+            telemetry.addData("leftArm position", robot.leftArm.getPosition());
+            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+
+            telemetry.update();
+
         } else {
         }
 
