@@ -31,9 +31,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -54,28 +56,31 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 public class HardwarePushbot {
-    public static final double LEFT_MID_SERVO = 0.325;
-    public static final double RIGHT_MID_SERVO = 0.525;
-    public static final double MAX_CLAW_OFFSET = 0.025;
-    public static final double ARM_SPEED = 0.1;
-    public static final double JEWEL_UP_LIMIT = 0.48;
-    public static final double JEWEL_DOWN_LIMIT = -0.05;
+    public static final double LEFT_MID_SERVO = 0.33;
+    public static final double RIGHT_MID_SERVO = 0.52;
+    public static final double MAX_CLAW_OFFSET = 0.1;
+    public static final double UP_ARM_SPEED = 0.03;
+    public static final double DOWN_ARM_SPEED = 0.008;
+    public static final double JEWEL_UP_LIMIT = 0;
+    public static final double JEWEL_DOWN_LIMIT = 0.49;
+    public static final double[] JEWEL_STOPS = {0.45, 0.47, 0.49};
     public static final double JEWEL_ARM_SPEED = 0.05;
     /* Public OpMode members. */
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
     public DcMotor thirdWheel = null;
     public Servo leftArm = null;
+    public Servo rightArm = null;
     public Servo leftClaw = null;
     public Servo rightClaw = null;
     public Servo jewelServo = null;
     public ColorSensor sensorColor = null;
     public DistanceSensor sensorDistance = null;
-    //    public TouchSensor sensorTouch = null;
-//    public static final double LEFT_CLAW_MIN   =  0.23 ;
-//    public static final double LEFT_CLAW_MAX   =  0.35 ;
-//    public static final double RIGHT_CLAW_MIN  =  0.5  ;
-//    public static final double RIGHT_CLAW_MAX  =  0.62 ;
+//    public TouchSensor sensorTouch = null;
+//    public static final double LEFT_CLAW_MIN   =  0;
+//    public static final double LEFT_CLAW_MAX   =  0;
+//    public static final double RIGHT_CLAW_MIN  =  0;
+//    public static final double RIGHT_CLAW_MAX  =  0;
     /* local OpMode members. */
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
@@ -94,9 +99,9 @@ public class HardwarePushbot {
         leftDrive = hwMap.get(DcMotor.class, "right_drive");
         rightDrive = hwMap.get(DcMotor.class, "left_drive");
         thirdWheel = hwMap.get(DcMotor.class, "third_wheel");
-        leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        thirdWheel.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        thirdWheel.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftDrive.setPower(0);
@@ -114,13 +119,25 @@ public class HardwarePushbot {
         rightClaw = hwMap.get(Servo.class, "right_hand");
         jewelServo = hwMap.get(Servo.class, "jewel_arm");
         leftArm = hwMap.get(Servo.class, "left_arm");
+        rightArm = hwMap.get(Servo.class, "right_arm");
         leftClaw.setPosition(LEFT_MID_SERVO);
         rightClaw.setPosition(RIGHT_MID_SERVO);
-        jewelServo.setPosition(0.48);
+        leftArm.setDirection(Servo.Direction.REVERSE);
+        rightArm.setDirection(Servo.Direction.FORWARD);
         leftArm.setPosition(0);
+        rightArm.setPosition(0);
 
         sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
 //        sensorTouch = hwMap.get(TouchSensor.class, "sensor_touch");
+    }
+
+    public void armUp(){
+        leftArm.setPosition(leftArm.getPosition() + UP_ARM_SPEED);
+        rightArm.setPosition(rightArm.getPosition() + UP_ARM_SPEED);
+    }
+    public void armDown(){
+        leftArm.setPosition(leftArm.getPosition() - DOWN_ARM_SPEED);
+        rightArm.setPosition(rightArm.getPosition() - DOWN_ARM_SPEED);
     }
 }
