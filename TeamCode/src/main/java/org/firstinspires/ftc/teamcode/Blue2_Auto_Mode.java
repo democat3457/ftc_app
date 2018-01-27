@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,8 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.sun.tools.javac.util.Constants.format;
 
-@Autonomous(name = "Blue Team Auto Mode 2", group = "Linear Opmode")
-//@Disabled
+@Autonomous(name = "Blue Team Auto Mode 2", group = "Autonomous")
+@Disabled
 public class Blue2_Auto_Mode extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample";
     HardwarePushbot robot = new HardwarePushbot();
@@ -280,14 +281,14 @@ public class Blue2_Auto_Mode extends LinearOpMode {
                 telemetry.addData("Color Detected", color);
                 telemetry.update();
 
-                forward(-2, 0.5);
-                turn(0, 1, 0.5);
-                forward(1, 0.5);
-                turn(0, 1, 0.5);
-                forward(0.5, 0.5);
-
-                robot.leftClaw.setPosition(robot.LEFT_MID_SERVO + robot.MAX_CLAW_OFFSET);
-                robot.rightClaw.setPosition(robot.RIGHT_MID_SERVO - robot.MAX_CLAW_OFFSET);
+//                forward(-2, 0.5);
+//                turn(0, 1, 0.5);
+//                forward(1, 0.5);
+//                turn(0, 1, 0.5);
+//                forward(0.5, 0.5);
+//
+//                robot.leftClaw.setPosition(robot.LEFT_MID_SERVO + robot.MAX_CLAW_OFFSET);
+//                robot.rightClaw.setPosition(robot.RIGHT_MID_SERVO - robot.MAX_CLAW_OFFSET);
 
                 sleep(5000);
                 count += 1;
