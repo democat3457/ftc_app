@@ -212,12 +212,22 @@ public class Main_Teleop_Mode extends OpMode {
         */
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
+
         if (gamepad2.y) {
-            robot.leftArm.setPosition(robot.leftArm.getPosition() + robot.ARM_SPEED);
+            robot.armUp();
+            telemetry.addData("leftArm position", robot.leftArm.getPosition());
+            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+
+            telemetry.update();
         } else if (gamepad2.a) {
-            robot.leftArm.setPosition(robot.leftArm.getPosition() - robot.ARM_SPEED);
+            robot.armDown();
+            telemetry.addData("leftArm position", robot.leftArm.getPosition());
+            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+
+            telemetry.update();
         } else {
         }
+
         // Send telemetry message to signify robot running;
 
         telemetry.addData("left", "%.2f", left);
