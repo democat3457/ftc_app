@@ -62,8 +62,7 @@ public class HardwarePushbot {
     public static final double UP_ARM_SPEED = 0.03;
     public static final double DOWN_ARM_SPEED = 0.008;
     public static final double JEWEL_UP_LIMIT = 0;
-    public static final double JEWEL_DOWN_LIMIT = 0.49;
-    public static final double[] JEWEL_STOPS = {0.45, 0.47, 0.49};
+    public static final double[] JEWEL_STOPS = {0.46, 0.48, 0.5};
     public static final double JEWEL_ARM_SPEED = 0.05;
     /* Public OpMode members. */
     public DcMotor leftDrive = null;

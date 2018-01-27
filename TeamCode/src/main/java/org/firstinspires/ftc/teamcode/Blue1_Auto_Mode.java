@@ -246,11 +246,21 @@ public class Blue1_Auto_Mode extends LinearOpMode {
 //                }
                 sleep(200);
                 int move = 0;
+
+                //Three out of three right
                 if (colors[0]=='R'&&colors[1]=='R'&&colors[2]=='R'){
                     move = -1;
                 } else if (colors[0]=='B'&&colors[1]=='B'&&colors[2]=='B'){
                     move = 1;
                 }
+                //Two out of three right
+                /*
+                if ((colors[0]=='R'&&colors[1]=='R')||(colors[1]=='R'&&colors[2]=='R')||(colors[0]=='R'&&colors[2]=='R')){
+                    move = -1;
+                } else if ((colors[0]=='B'&&colors[1]=='B')||(colors[1]=='B'&&colors[2]=='B')||(colors[0]=='B'&&colors[2]=='B')){
+                    move = 1;
+                }
+                */
                 if (move == -1) {
                     forward(-0.45, 0.5);
 

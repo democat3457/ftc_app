@@ -30,8 +30,6 @@ import static com.sun.tools.javac.util.Constants.format;
 public class Blue2_Auto_Mode extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample";
     HardwarePushbot robot = new HardwarePushbot();
-
-    // TODO: VuMark stuff
     OpenGLMatrix lastLocation = null;
     /**
      * {@link} is the variable we will use to store our instance of the Vuforia
@@ -84,6 +82,9 @@ public class Blue2_Auto_Mode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        int count = 0;
+
         /*
         // get a reference to the color sensor.
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
@@ -103,15 +104,15 @@ public class Blue2_Auto_Mode extends LinearOpMode {
         robot.init(hardwareMap);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
 
-        int count = 0;
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
 
-        // TODO: Vuforia stuff
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
-        */
-
+         */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -146,22 +147,12 @@ public class Blue2_Auto_Mode extends LinearOpMode {
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-
-        robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
-        double jewelArmPosition = robot.JEWEL_UP_LIMIT;
-
         waitForStart();
         runtime.reset();
-
         relicTrackables.activate();
 
         while (opModeIsActive()) {
@@ -178,14 +169,14 @@ public class Blue2_Auto_Mode extends LinearOpMode {
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-                telemetry.addData("VuMark", "%s visible", vuMark);
+//                telemetry.addData("VuMark", "%s visible", vuMark);
 
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-                telemetry.addData("Pose", format(pose));
+//                telemetry.addData("Pose", format(pose));
 
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
@@ -204,67 +195,74 @@ public class Blue2_Auto_Mode extends LinearOpMode {
                     double rZ = rot.thirdAngle;
                 }
             } else {
-                telemetry.addData("VuMark", "not visible");
+//                telemetry.addData("VuMark", "not visible");
             }
 
-            telemetry.update();
+//            telemetry.update();
 
+            // Perform the Autonomous steps for the Jewel Arm detection.
             if (count < 1) {
-                telemetry.addData("Status", "About to set arm to down pos");
-                telemetry.update();
-                // move jewel arm to down position
-                while (jewelArmPosition >= robot.JEWEL_DOWN_LIMIT) {
-                    jewelArmPosition = jewelArmPosition - robot.JEWEL_ARM_SPEED;
-                    robot.jewelServo.setPosition(jewelArmPosition);
-                    telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
-                    telemetry.update();
-                    sleep(50);
-                }
+//                telemetry.addData("Status", "About to set arm to down pos");
+//                telemetry.update();
 
-                sleep(1000);
+                char[] colors = new char[3];
+                for (int i=0;i<3;i++) {
+//                    while (jewelArmPosition >= robot.JEWEL_DOWN_LIMIT) {
+//                        jewelArmPosition = jewelArmPosition - robot.JEWEL_ARM_SPEED;
+//                        robot.jewelServo.setPosition(jewelArmPosition);
+//                        telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
+//                        telemetry.update();
+//                        sleep(50);
+//                    }
+                    robot.jewelServo.setPosition(robot.JEWEL_STOPS[i]);
+
+                    sleep(1000);
 //                telemetry.addData("Status", "About to move jewel");
 //                telemetry.update();
-                String color = "";
-                double alpha = robot.sensorColor.alpha();
-                double red = robot.sensorColor.red();
-                double blue = robot.sensorColor.blue();
-                double green = robot.sensorColor.green();
-                if (robot.sensorColor.red() < 25) {
-                    color = "";
-                } else if (robot.sensorColor.blue() < 25) {
-                    color = "";
-                } else if (robot.sensorColor.red() < robot.sensorColor.blue()) {
-                    // moving forward to knock off the jewel
+//                    double alpha = robot.sensorColor.alpha();
+                    double red = robot.sensorColor.red();
+                    double blue = robot.sensorColor.blue();
+//                    double green = robot.sensorColor.green();
+                    if (red > blue) {
 //                    telemetry.addData("Status", "About to move forward");
 //                    telemetry.update();
-                    forward(0.35, 0.10);
-                    color = "red";
-                } else if (robot.sensorColor.red() > robot.sensorColor.blue()) {
-                    // moving backward to knock off the jewel
+                        colors[i] = 'R';
+                    } else if (red < blue) {
+                        // moving backward to knock off the jewel
 //                    telemetry.addData("Status", "About to move backward");
 //                    telemetry.update();
-                    forward(-0.35, 0.10);
-                    color = "blue";
-                }
+                        colors[i] = 'B';
+                    }
 //                telemetry.addData("Status", "About to set arm to up pos");
 //                telemetry.update();
-                // move jewel arm to up position
-                telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
-                telemetry.update();
-                while (jewelArmPosition <= robot.JEWEL_UP_LIMIT) {
-                    jewelArmPosition = jewelArmPosition + robot.JEWEL_ARM_SPEED;
-                    robot.jewelServo.setPosition(jewelArmPosition);
-                    telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
-                    telemetry.update();
-                    sleep(50);
+                    // move jewel arm to up position
+//                telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
+//                telemetry.update();
+                }
+//                while (jewelArmPosition <= robot.JEWEL_UP_LIMIT) {
+//                    jewelArmPosition = jewelArmPosition + robot.JEWEL_ARM_SPEED;
+//                    robot.jewelServo.setPosition(jewelArmPosition);
+//                    telemetry.addData("Jewel Arm down", String.format(Locale.US, "%.02f", jewelArmPosition));
+//                    telemetry.update();
+//                    sleep(50);
+//                }
+                sleep(200);
+                int move = 0;
+                if (colors[0]=='R'&&colors[1]=='R'&&colors[2]=='R'){
+                    move = -1;
+                } else if (colors[0]=='B'&&colors[1]=='B'&&colors[2]=='B'){
+                    move = 1;
+                }
+                if (move == -1) {
+                    forward(-0.45, 0.5);
+
+                } else if (move == 1) {
+                    forward(0.45, 0.5);
                 }
                 sleep(1000);
-                if (color.equals("red")) {
-                    forward(-0.45, 0.1);
-
-                } else if (color.equals("blue")) {
-                    forward(0.45, 0.1);
-                }
+                robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
+                telemetry.addData("Detected colors: ",String.valueOf(colors));
+                telemetry.update();
 
                 // prints current run time to the screen
 //                telemetry.addData("Status", "Run Time: ", runtime.toString());
@@ -274,13 +272,12 @@ public class Blue2_Auto_Mode extends LinearOpMode {
 //                String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
 
 
-                telemetry.addData("Alpha", alpha);
-                telemetry.addData("Red  ", red);
-                telemetry.addData("Green", green);
-                telemetry.addData("Blue ", blue);
-                telemetry.addData("Color Detected", color);
-                telemetry.update();
-
+//                telemetry.addData("Alpha", alpha);
+//                telemetry.addData("Red  ", red);
+//                telemetry.addData("Green", green);
+//                telemetry.addData("Blue ", blue);
+//                telemetry.update();
+//
 //                forward(-2, 0.5);
 //                turn(0, 1, 0.5);
 //                forward(1, 0.5);
