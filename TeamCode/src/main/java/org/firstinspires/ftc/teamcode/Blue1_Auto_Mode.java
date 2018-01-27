@@ -36,8 +36,6 @@ public class Blue1_Auto_Mode extends LinearOpMode {
     VuforiaLocalizer vuforia;
     private ElapsedTime runtime = new ElapsedTime();
 
-
-
     /*
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
@@ -82,6 +80,9 @@ public class Blue1_Auto_Mode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        int count = 0;
+
         /*
         // get a reference to the color sensor.
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
@@ -101,8 +102,10 @@ public class Blue1_Auto_Mode extends LinearOpMode {
         robot.init(hardwareMap);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
 
-        int count = 0;
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
 
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
@@ -146,14 +149,8 @@ public class Blue1_Auto_Mode extends LinearOpMode {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
-
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        runtime.reset();
-
         waitForStart();
+        runtime.reset();
         relicTrackables.activate();
 
         while (opModeIsActive()) {
@@ -170,14 +167,14 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-                telemetry.addData("VuMark", "%s visible", vuMark);
+//                telemetry.addData("VuMark", "%s visible", vuMark);
 
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-                telemetry.addData("Pose", format(pose));
+//                telemetry.addData("Pose", format(pose));
 
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
@@ -196,11 +193,12 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                     double rZ = rot.thirdAngle;
                 }
             } else {
-                telemetry.addData("VuMark", "not visible");
+//                telemetry.addData("VuMark", "not visible");
             }
 
-            telemetry.update();
+//            telemetry.update();
 
+            // Perform the Autonomous steps for the Jewel Arm detection.
             if (count < 1) {
 //                telemetry.addData("Status", "About to set arm to down pos");
 //                telemetry.update();
@@ -260,7 +258,8 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                     forward(0.45, 0.1);
                 }
                 robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
-                telemetry.addData("Detected",colors);
+                String colorsString= new String(colors);
+                telemetry.addData("Detected colors: ",colorsString);
                 telemetry.update();
 
                 // prints current run time to the screen
