@@ -267,7 +267,7 @@ public class Blue1_Auto_Mode extends LinearOpMode {
                 } else if (move == 1) {
                     forward(0.45, 0.5);
                 }
-                sleep(1000);
+                sleep(2000);
                 robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
                 telemetry.addData("Detected colors: ",String.valueOf(colors));
                 telemetry.update();
