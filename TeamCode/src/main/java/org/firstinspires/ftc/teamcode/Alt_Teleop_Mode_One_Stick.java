@@ -149,11 +149,11 @@ public class Alt_Teleop_Mode_One_Stick extends OpMode {
         }*/
 
         forward = -gamepad1.left_stick_y;
-        lr = (gamepad1.left_stick_x)/2;
+        lr = (gamepad1.left_stick_x) / 2;
 
         // chassis movement
         robot.leftDrive.setPower(Range.clip(forward + gamepad1.right_stick_x, -1, 1));
-        robot.rightDrive.setPower(Range.clip(forward - gamepad1.right_stick_x,-1, 1));
+        robot.rightDrive.setPower(Range.clip(forward - gamepad1.right_stick_x, -1, 1));
         robot.thirdWheel.setPower(lr);
 
         /*if (gamepad1.x){

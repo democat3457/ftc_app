@@ -31,11 +31,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -75,7 +73,7 @@ public class HardwarePushbot {
     public Servo jewelServo = null;
     public ColorSensor sensorColor = null;
     public DistanceSensor sensorDistance = null;
-//    public TouchSensor sensorTouch = null;
+    //    public TouchSensor sensorTouch = null;
 //    public static final double LEFT_CLAW_MIN   =  0;
 //    public static final double LEFT_CLAW_MAX   =  0;
 //    public static final double RIGHT_CLAW_MIN  =  0;
@@ -119,24 +117,37 @@ public class HardwarePushbot {
         jewelServo = hwMap.get(Servo.class, "jewel_arm");
         leftArm = hwMap.get(Servo.class, "left_arm");
         rightArm = hwMap.get(Servo.class, "right_arm");
-        leftClaw.setPosition(LEFT_MID_SERVO);
-        rightClaw.setPosition(RIGHT_MID_SERVO);
+
+        leftClaw.setPosition(LEFT_MID_SERVO - MAX_CLAW_OFFSET);
+        rightClaw.setPosition(RIGHT_MID_SERVO + MAX_CLAW_OFFSET);
+
+//        leftClaw.setPosition(LEFT_MID_SERVO);
+//        rightClaw.setPosition(RIGHT_MID_SERVO);
         leftArm.setDirection(Servo.Direction.REVERSE);
         rightArm.setDirection(Servo.Direction.FORWARD);
-        leftArm.setPosition(0);
-        rightArm.setPosition(0);
+        setArmPosition(.2);
 
         sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
 //        sensorTouch = hwMap.get(TouchSensor.class, "sensor_touch");
     }
 
-    public void armUp(){
+    public void setArmPosition(double position) {
+        leftArm.setPosition(position);
+        rightArm.setPosition(position);
+    }
+
+    public void armUp() {
         leftArm.setPosition(leftArm.getPosition() + UP_ARM_SPEED);
         rightArm.setPosition(rightArm.getPosition() + UP_ARM_SPEED);
     }
-    public void armDown(){
+
+    public void armDown() {
         leftArm.setPosition(leftArm.getPosition() - DOWN_ARM_SPEED);
         rightArm.setPosition(rightArm.getPosition() - DOWN_ARM_SPEED);
+    }
+
+    public void clawClose() {
+
     }
 }

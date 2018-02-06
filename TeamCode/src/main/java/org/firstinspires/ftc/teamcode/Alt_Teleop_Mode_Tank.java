@@ -152,9 +152,9 @@ public class Alt_Teleop_Mode_Tank extends OpMode {
             lr = 1;
         } else if (gamepad1.dpad_right) {
             lr = -1;
-        } else if (gamepad1.left_trigger!=0){
+        } else if (gamepad1.left_trigger != 0) {
             lr = gamepad1.left_trigger;
-        } else if (gamepad1.right_trigger!=0){
+        } else if (gamepad1.right_trigger != 0) {
             lr = -gamepad1.right_trigger;
         }
 
@@ -198,7 +198,17 @@ public class Alt_Teleop_Mode_Tank extends OpMode {
             telemetry.addData("leftArm position", robot.leftArm.getPosition());
             telemetry.addData("rightArm position", robot.rightArm.getPosition());
             telemetry.update();
+        } else if (gamepad2.dpad_up) {
+            robot.armUp();
+            telemetry.addData("leftArm position", robot.leftArm.getPosition());
+            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+            telemetry.update();
         } else if (gamepad2.a) {
+            robot.armDown();
+            telemetry.addData("leftArm position", robot.leftArm.getPosition());
+            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+            telemetry.update();
+        } else if (gamepad2.dpad_down) {
             robot.armDown();
             telemetry.addData("leftArm position", robot.leftArm.getPosition());
             telemetry.addData("rightArm position", robot.rightArm.getPosition());
