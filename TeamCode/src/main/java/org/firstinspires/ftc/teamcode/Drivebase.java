@@ -57,22 +57,22 @@ import org.firstinspires.ftc.teamcode.Constants;
 
 public class Drivebase extends Constants {
     
-    public DcMotor leftDrive;
-    public DcMotor rightDrive;
-    public DcMotor thirdWheel;
-    public Servo leftArm;
-    public Servo rightArm;
-    public Servo leftClaw;
-    public Servo rightClaw;
-    public Servo jewelServo;
+    private DcMotor leftDrive;
+    private DcMotor rightDrive;
+    private DcMotor thirdWheel;
+    private Servo leftArm;
+    private Servo rightArm;
+    private Servo leftClaw;
+    private Servo rightClaw;
+    private Servo jewelServo;
 
     // Sensors
-    public ColorSensor sensorColor;
-    public DistanceSensor sensorDistance;
-    public TouchSensor sensorTouch;
+    private ColorSensor sensorColor;
+    private DistanceSensor sensorDistance;
+    private TouchSensor sensorTouch;
 	
     /* local OpMode members. */
-    public HardwareMap hwMap = null;
+    private HardwareMap hwMap;
     private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
@@ -86,40 +86,40 @@ public class Drivebase extends Constants {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive = hwMap.get(DcMotor.class, "right_drive");
-        rightDrive = hwMap.get(DcMotor.class, "left_drive");
-        thirdWheel = hwMap.get(DcMotor.class, "third_wheel");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        thirdWheel.setDirection(DcMotor.Direction.REVERSE);
+        leftDrive = hwMap.get(DcMotor.class, Constants.LEFT_DRIVE_NAME);
+        rightDrive = hwMap.get(DcMotor.class, Constants.RIGHT_DRIVE_NAME);
+        thirdWheel = hwMap.get(DcMotor.class, Constants.THIRD_WHEEL_NAME);
+        leftDrive.setDirection(Constants.LEFT_DRIVE_REVERSE);
+        rightDrive.setDirection(Constants.RIGHT_DRIVE_REVERSE);
+        thirdWheel.setDirection(Constants.THIRD_WHEEL_REVERSE);
 
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         thirdWheel.setPower(0);
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        thirdWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftDrive.setMode(Constants.MOTOR_RUN_MODE);
+        rightDrive.setMode(Constants.MOTOR_RUN_MODE);
+        thirdWheel.setMode(Constants.MOTOR_RUN_MODE);
 
         // Define and initialize ALL installed servos.
-        leftClaw = hwMap.get(Servo.class, "left_hand");
-        rightClaw = hwMap.get(Servo.class, "right_hand");
-        jewelServo = hwMap.get(Servo.class, "jewel_arm");
-        leftArm = hwMap.get(Servo.class, "left_arm");
-        rightArm = hwMap.get(Servo.class, "right_arm");
+        leftClaw = hwMap.get(Servo.class, Constants.LEFT_CLAW_NAME);
+        rightClaw = hwMap.get(Servo.class, Constants.RIGHT_CLAW_NAME);
+        jewelServo = hwMap.get(Servo.class, Constants.JEWEL_SERVO_NAME);
+        leftArm = hwMap.get(Servo.class, Constants.LEFT_ARM_NAME);
+        rightArm = hwMap.get(Servo.class, Constants.RIGHT_ARM_NAME);
 
-        leftClaw.setPosition(LEFT_MID_SERVO - MAX_CLAW_OFFSET);
-        rightClaw.setPosition(RIGHT_MID_SERVO + MAX_CLAW_OFFSET);
+        leftClaw.setPosition(Constants.LEFT_MID_SERVO - Constants.MAX_CLAW_OFFSET);
+        rightClaw.setPosition(Constants.RIGHT_MID_SERVO + Constants.MAX_CLAW_OFFSET);
 
-//        leftClaw.setPosition(LEFT_MID_SERVO);
-//        rightClaw.setPosition(RIGHT_MID_SERVO);
-        leftArm.setDirection(Servo.Direction.REVERSE);
-        rightArm.setDirection(Servo.Direction.FORWARD);
+        // leftClaw.setPosition(LEFT_MID_SERVO);
+        // rightClaw.setPosition(RIGHT_MID_SERVO);
+        leftArm.setDirection(Constants.LEFT_ARM_REVERSE);
+        rightArm.setDirection(Constants.RIGHT_ARM_REVERSE);
         setArmPosition(.2);
 
-        sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
-//        sensorTouch = hwMap.get(TouchSensor.class, "sensor_touch");
+        sensorColor = hwMap.get(ColorSensor.class, Constants.COLOR_SENSOR_NAME);
+        sensorDistance = hwMap.get(DistanceSensor.class, Constants.DISTANCE_SENSOR_NAME);
+        sensorTouch = hwMap.get(TouchSensor.class, Constants.TOUCH_SENSOR_NAME);
     }
 
     public void setArmPosition(double position) {
@@ -128,16 +128,30 @@ public class Drivebase extends Constants {
     }
 
     public void armUp() {
-        leftArm.setPosition(leftArm.getPosition() + UP_ARM_SPEED);
-        rightArm.setPosition(rightArm.getPosition() + UP_ARM_SPEED);
+        leftArm.setPosition(leftArm.getPosition() + Constants.UP_ARM_SPEED);
+        rightArm.setPosition(rightArm.getPosition() + Constants.UP_ARM_SPEED);
     }
 
     public void armDown() {
-        leftArm.setPosition(leftArm.getPosition() - DOWN_ARM_SPEED);
-        rightArm.setPosition(rightArm.getPosition() - DOWN_ARM_SPEED);
+        leftArm.setPosition(leftArm.getPosition() - Constants.DOWN_ARM_SPEED);
+        rightArm.setPosition(rightArm.getPosition() - Constants.DOWN_ARM_SPEED);
     }
 
     public HardwareMap getHardwareMap() { return hwMap; }
+
     public DcMotor getLeftDrive() { return leftDrive; }
     public DcMotor getRightDrive() { return rightDrive; }
+    public DcMotor getThirdWheel() { return thirdWheel; }
+
+    public Servo getLeftClaw() { return leftClaw; }
+    public Servo getRightClaw() { return rightClaw; }
+
+    public Servo getJewelArm() { return jewelServo; }
+
+    public Servo getLeftArm() { return leftArm; }
+    public Servo getRightArm() { return rightArm; }
+
+    public ColorSensor getColorSensor() { return sensorColor; }
+    public DistanceSensor getDistanceSensor() { return sensorDistance; }
+    public TouchSensor getTouchSensor() { return sensorTouch; }
 }

@@ -26,10 +26,10 @@ public class Constants {
     // Motors
     public static final String LEFT_DRIVE_NAME = "left_drive";
     public static final String RIGHT_DRIVE_NAME = "right_drive";
-    public static final String STRAFE_DRIVE_NAME = "third_wheel";
+    public static final String THIRD_WHEEL_NAME = "third_wheel";
 
-    public static final DcMotor.Direction LEFT_DRIVE_REVERSE = DcMotor.Direction.REVERSE;
-    public static final DcMotor.Direction RIGHT_DRIVE_REVERSE = DcMotor.Direction.FORWARD;
+    public static final DcMotor.Direction LEFT_DRIVE_REVERSE = DcMotor.Direction.REVERSE;  // Set to REVERSE if using AndyMark motors
+    public static final DcMotor.Direction RIGHT_DRIVE_REVERSE = DcMotor.Direction.FORWARD; // Set to FORWARD if using AndyMark motors
     public static final DcMotor.Direction THIRD_WHEEL_REVERSE = DcMotor.Direction.REVERSE;
 
     public static final DcMotor.RunMode MOTOR_RUN_MODE = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
@@ -41,10 +41,17 @@ public class Constants {
     public static final String LEFT_ARM_NAME = "left_arm";
     public static final String RIGHT_ARM_NAME  = "right_arm";
 
+    public static final Servo.Direction LEFT_ARM_REVERSE = Servo.Direction.REVERSE;
+    public static final Servo.Direction RIGHT_ARM_REVERSE = Servo.Direction.FORWARD;
 
     // Claw variables
     public static final double LEFT_CLAW_MIN   =  0;
     public static final double LEFT_CLAW_MAX   =  0;
     public static final double RIGHT_CLAW_MIN  =  0;
-	public static final double RIGHT_CLAW_MAX  =  0;
+    public static final double RIGHT_CLAW_MAX  =  0;
+    
+    // Sensors
+    public static final String COLOR_SENSOR_NAME = "sensor_color_distance";
+    public static final String DISTANCE_SENSOR_NAME = "sensor_color_distance";
+    public static final String TOUCH_SENSOR_NAME = "sensor_touch";
 }
