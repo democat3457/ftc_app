@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.util.Range;
  * The code is structured as an Iterative OpMode
  * <p>
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
+ * All device access is managed through the Drivebase class.
  * <p>
  * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
@@ -65,8 +65,8 @@ public class Alt_Teleop_Mode_Tank extends OpMode {
     static final double TURN_SPEED = 0.5;
     final double CLAW_SPEED = 0.01;                 // sets rate to move servo
     /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
-    // could also use HardwarePushbotMatrix class.
+    Drivebase robot = new Drivebase(); // use the class created to define a Pushbot's hardware
+    // could also use DrivebaseMatrix class.
     double clawOffset = 0;                  // Servo mid position
     private ElapsedTime runtime = new ElapsedTime();
 

@@ -32,9 +32,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.Constants;
 
 /**
  * This is NOT an opmode.
@@ -53,37 +55,28 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open right claw: "right_hand"
  */
 
-public class HardwarePushbot {
-    public static final double LEFT_MID_SERVO = 0.33;
-    public static final double RIGHT_MID_SERVO = 0.52;
-    public static final double MAX_CLAW_OFFSET = 0.1;
-    public static final double UP_ARM_SPEED = 0.03;
-    public static final double DOWN_ARM_SPEED = 0.008;
-    public static final double JEWEL_UP_LIMIT = 0;
-    public static final double[] JEWEL_STOPS = {0.46, 0.48, 0.5};
-    public static final double JEWEL_ARM_SPEED = 0.05;
-    /* Public OpMode members. */
-    public DcMotor leftDrive = null;
-    public DcMotor rightDrive = null;
-    public DcMotor thirdWheel = null;
-    public Servo leftArm = null;
-    public Servo rightArm = null;
-    public Servo leftClaw = null;
-    public Servo rightClaw = null;
-    public Servo jewelServo = null;
-    public ColorSensor sensorColor = null;
-    public DistanceSensor sensorDistance = null;
-    //    public TouchSensor sensorTouch = null;
-//    public static final double LEFT_CLAW_MIN   =  0;
-//    public static final double LEFT_CLAW_MAX   =  0;
-//    public static final double RIGHT_CLAW_MIN  =  0;
-//    public static final double RIGHT_CLAW_MAX  =  0;
+public class Drivebase extends Constants {
+    
+    public DcMotor leftDrive;
+    public DcMotor rightDrive;
+    public DcMotor thirdWheel;
+    public Servo leftArm;
+    public Servo rightArm;
+    public Servo leftClaw;
+    public Servo rightClaw;
+    public Servo jewelServo;
+
+    // Sensors
+    public ColorSensor sensorColor;
+    public DistanceSensor sensorDistance;
+    public TouchSensor sensorTouch;
+	
     /* local OpMode members. */
-    HardwareMap hwMap = null;
+    public HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public HardwarePushbot() {
+    public Drivebase() {
 
     }
 
@@ -100,13 +93,10 @@ public class HardwarePushbot {
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         thirdWheel.setDirection(DcMotor.Direction.REVERSE);
 
-        // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         thirdWheel.setPower(0);
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         thirdWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -147,7 +137,7 @@ public class HardwarePushbot {
         rightArm.setPosition(rightArm.getPosition() - DOWN_ARM_SPEED);
     }
 
-    public void clawClose() {
-
-    }
+    public HardwareMap getHardwareMap() { return hwMap; }
+    public DcMotor getLeftDrive() { return leftDrive; }
+    public DcMotor getRightDrive() { return rightDrive; }
 }

@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Disabled
 public class Red2_Auto_Mode extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample";
-    HardwarePushbot robot = new HardwarePushbot();
+    Drivebase robot = new Drivebase();
     OpenGLMatrix lastLocation = null;
     /**
      * {@link} is the variable we will use to store our instance of the Vuforia
