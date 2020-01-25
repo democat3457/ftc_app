@@ -36,8 +36,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import static android.os.SystemClock.sleep;
-
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
@@ -53,9 +51,9 @@ import static android.os.SystemClock.sleep;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Three Wheels Steering", group = "TeleOp")
+@TeleOp(name = "Three Wheels One Stick", group = "TeleOp")
 @Disabled
-public class Alt_Teleop_Mode_Steering extends OpMode {
+public class Alt_Teleop_Mode_One_Stick extends OpMode {
 
     //int upTargPos = 1600; //upwards bound of the encoder for the arm
     //int downTargPos = -50; // lower bound of the encoder for the arm
@@ -77,23 +75,23 @@ public class Alt_Teleop_Mode_Steering extends OpMode {
     public void encoderArm (double speed, double inches, double timeoutS){
         int newArmTarget;
 
-        newArmTarget = robot.leftArm.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        newArmTarget = robot.getLeftArm().getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
 
-        robot.leftArm.setTargetPosition(newArmTarget);
+        robot.getLeftArm().setTargetPosition(newArmTarget);
 
-        robot.leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.getLeftArm().setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         runtime.reset();
-        robot.leftArm.setPower(Math.abs(speed));
+        robot.getLeftArm().setPower(Math.abs(speed));
 
-        while ((runtime.seconds() < timeoutS) && robot.leftArm.isBusy()){
+        while ((runtime.seconds() < timeoutS) && robot.getLeftArm().isBusy()){
             telemetry.addData("Path1", "Running to %7d", newArmTarget);
-            telemetry.addData("Path2", "Running at %7d", robot.leftArm.getCurrentPosition());
+            telemetry.addData("Path2", "Running at %7d", robot.getLeftArm().getCurrentPosition());
         }
 
-        robot.leftArm.setPower(0);
+        robot.getLeftArm().setPower(0);
 
-        robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        
     }
     */
 
@@ -106,13 +104,13 @@ public class Alt_Teleop_Mode_Steering extends OpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.getLeftDrive().setMode(Constants.MOTOR_RUN_MODE);
+        robot.getRightDrive().setMode(Constants.MOTOR_RUN_MODE);
 
         // debug info for claw
         telemetry.addData("claw", "Claw Offset = %.2f", clawOffset);
-        telemetry.addData("left claw", robot.leftClaw.getPosition());
-        telemetry.addData("right claw", robot.rightClaw.getPosition());
+        telemetry.addData("left claw", robot.getLeftClaw().getPosition());
+        telemetry.addData("right claw", robot.getRightClaw().getPosition());
         telemetry.addData("Say", "Hello, Driver!");
 
     }
@@ -137,40 +135,34 @@ public class Alt_Teleop_Mode_Steering extends OpMode {
     @Override
     public void loop() {
         // keeps jewel arm upright
-        robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
-        robot.sensorColor.enableLed(false);
-        robot.sensorColor.close();
+        robot.getJewelArm().setPosition(Constants.JEWEL_UP_LIMIT);
+        robot.getColorSensor().enableLed(false);
+        robot.getColorSensor().close();
 
         double forward;
         double lr = 0;
 
-        /*if (robot.sensorTouch.isPressed()){
-            robot.leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.leftArm.setPower(0);
+        /*if (robot.getTouchSensor().isPressed()){
+            robot.resetEncoders(robot.getLeftArm(), DcMotor.RunMode.RUN_USING_ENCODER);
+            
+            robot.getLeftArm().setPower(0);
         }*/
 
-        // dead zone
         forward = -gamepad1.left_stick_y;
-
-        if (gamepad1.dpad_left) {
-            lr = 1;
-        } else if (gamepad1.dpad_right) {
-            lr = -1;
-        }
+        lr = (gamepad1.left_stick_x) / 2;
 
         // chassis movement
-        robot.leftDrive.setPower(forward - gamepad1.right_stick_x);
-        robot.rightDrive.setPower(forward + gamepad1.right_stick_x);
+        robot.getLeftDrive().setPower(Range.clip(forward + gamepad1.right_stick_x, -1, 1));
+        robot.getRightDrive().setPower(Range.clip(forward - gamepad1.right_stick_x, -1, 1));
         robot.thirdWheel.setPower(lr);
 
         /*if (gamepad1.x){
-            robot.leftDrive.setPower(-1);
-            robot.rightDrive.setPower(1);
+            robot.getLeftDrive().setPower(-1);
+            robot.getRightDrive().setPower(1);
         }
         if (gamepad1.b){
-            robot.leftDrive.setPower(1);
-            robot.rightDrive.setPower(-1);
+            robot.getLeftDrive().setPower(1);
+            robot.getRightDrive().setPower(-1);
         } */
 
 
@@ -183,30 +175,30 @@ public class Alt_Teleop_Mode_Steering extends OpMode {
 
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
-        clawOffset = Range.clip(clawOffset, -robot.MAX_CLAW_OFFSET, robot.MAX_CLAW_OFFSET);
-        robot.leftClaw.setPosition(robot.LEFT_MID_SERVO + clawOffset);
-        robot.rightClaw.setPosition(robot.RIGHT_MID_SERVO - clawOffset);
+        clawOffset = Range.clip(clawOffset, -Constants.MAX_CLAW_OFFSET, Constants.MAX_CLAW_OFFSET);
+        robot.getLeftClaw().setPosition(Constants.LEFT_MID_SERVO + clawOffset);
+        robot.getRightClaw().setPosition(Constants.RIGHT_MID_SERVO - clawOffset);
 
         // debug info for claws
         telemetry.addData("claw", "Claw Offset = %.2f", clawOffset);
-        telemetry.addData("left claw", robot.leftClaw.getPosition());
-        telemetry.addData("right claw", robot.rightClaw.getPosition());
+        telemetry.addData("left claw", robot.getLeftClaw().getPosition());
+        telemetry.addData("right claw", robot.getRightClaw().getPosition());
         telemetry.update();
 
         // arm movement with encoder
         /*
         if (gamepad1.y) {
-            robot.leftArm.setTargetPosition(upTargPos);
-            if (robot.leftArm.getCurrentPosition() < robot.leftArm.getTargetPosition())
-                robot.leftArm.setPower(robot.ARM_UP_POWER);
+            robot.getLeftArm().setTargetPosition(upTargPos);
+            if (robot.getLeftArm().getCurrentPosition() < robot.getLeftArm().getTargetPosition())
+                robot.getLeftArm().setPower(robot.ARM_UP_POWER);
             else
-                robot.leftArm.setPower(0);
+                robot.getLeftArm().setPower(0);
         else if (gamepad1.a) {
-            robot.leftArm.setTargetPosition(downTargPos);
-            if(robot.leftArm.getCurrentPosition() > robot.leftArm.getTargetPosition())
-                robot.leftArm.setPower(robot.ARM_DOWN_POWER);
+            robot.getLeftArm().setTargetPosition(downTargPos);
+            if(robot.getLeftArm().getCurrentPosition() > robot.getLeftArm().getTargetPosition())
+                robot.getLeftArm().setPower(robot.ARM_DOWN_POWER);
             else
-                robot.leftArm.setPower(0);
+                robot.getLeftArm().setPower(0);
             linearSlide(-0.1, -1);
         }
 
@@ -214,7 +206,7 @@ public class Alt_Teleop_Mode_Steering extends OpMode {
             linearSlide(0.1, 1);
         }
         else {
-            robot.leftArm.setPower(0.0);
+            robot.getLeftArm().setPower(0.0);
         }
         */
 
@@ -222,16 +214,15 @@ public class Alt_Teleop_Mode_Steering extends OpMode {
 
         if (gamepad2.y) {
             robot.armUp();
-            telemetry.addData("leftArm position", robot.leftArm.getPosition());
-            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+            telemetry.addData("getLeftArm() position", robot.getLeftArm().getPosition());
+            telemetry.addData("getRightArm() position", robot.getRightArm().getPosition());
 
             telemetry.update();
-            sleep(1);
 
         } else if (gamepad2.a) {
             robot.armDown();
-            telemetry.addData("leftArm position", robot.leftArm.getPosition());
-            telemetry.addData("rightArm position", robot.rightArm.getPosition());
+            telemetry.addData("getLeftArm() position", robot.getLeftArm().getPosition());
+            telemetry.addData("getRightArm() position", robot.getRightArm().getPosition());
 
             telemetry.update();
 
@@ -240,8 +231,8 @@ public class Alt_Teleop_Mode_Steering extends OpMode {
 
         // Send telemetry message to signify robot running;
 
-        telemetry.addData("left", "%.2f", robot.leftDrive.getPower());
-        telemetry.addData("right", "%.2f", robot.rightDrive.getPower());
+        telemetry.addData("left", "%.2f", robot.getLeftDrive().getPower());
+        telemetry.addData("right", "%.2f", robot.getRightDrive().getPower());
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }

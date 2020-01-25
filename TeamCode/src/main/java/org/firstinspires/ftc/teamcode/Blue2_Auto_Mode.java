@@ -47,12 +47,12 @@ public class Blue2_Auto_Mode extends LinearOpMode {
 
     /*
     public void driveLine (double speed, double inches){
-        int startPos = robot.leftArm.getCurrentPosition();
-        robot.leftArm.setPower(0.1);
-        while (Math.abs(robot.leftArm.getCurrentPosition()-startPos)<=(int)(inches*(1120/4))){
+        int startPos = robot.getLeftArm().getCurrentPosition();
+        robot.getLeftArm().setPower(0.1);
+        while (Math.abs(robot.getLeftArm().getCurrentPosition()-startPos)<=(int)(inches*(1120/4))){
             telemetry.update();
         }
-        robot.leftArm.setPower(0);
+        robot.getLeftArm().setPower(0);
         sleep(200);
     }
     */
@@ -60,21 +60,21 @@ public class Blue2_Auto_Mode extends LinearOpMode {
     public void forward(double power, double time) {
         double startTime = runtime.time(TimeUnit.SECONDS);
         while (runtime.time(TimeUnit.SECONDS) < startTime + time) {
-            robot.leftDrive.setPower(power);
-            robot.rightDrive.setPower(power);
+            robot.getLeftDrive().setPower(power);
+            robot.getRightDrive().setPower(power);
         }
-        robot.leftDrive.setPower(0);
-        robot.rightDrive.setPower(0);
+        robot.getLeftDrive().setPower(0);
+        robot.getRightDrive().setPower(0);
     }
 
     public void turn(double leftPower, double rightPower, double time) {
         double startTime = runtime.time(TimeUnit.SECONDS);
         while (runtime.time(TimeUnit.SECONDS) < startTime + time) {
-            robot.leftDrive.setPower(leftPower);
-            robot.rightDrive.setPower(rightPower);
+            robot.getLeftDrive().setPower(leftPower);
+            robot.getRightDrive().setPower(rightPower);
         }
-        robot.leftDrive.setPower(0);
-        robot.rightDrive.setPower(0);
+        robot.getLeftDrive().setPower(0);
+        robot.getRightDrive().setPower(0);
     }
 
     @Override
@@ -84,10 +84,10 @@ public class Blue2_Auto_Mode extends LinearOpMode {
 
         /*
         // get a reference to the color sensor.
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+        getColorSensor() = hardwareMap.get(ColorSensor.class, Constants.COLOR_SENSOR_NAME);
 
         // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        getDistanceSensor() = hardwareMap.get(DistanceSensor.class, Constants.DISTANCE_SENSOR_NAME);
 
         // sometimes it helps to multiply the raw RGB values with a scale factor
         // to amplify/attentuate the measured values.
@@ -99,13 +99,13 @@ public class Blue2_Auto_Mode extends LinearOpMode {
         final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
         */
         robot.init(hardwareMap);
-        robot.leftClaw.setPosition(robot.LEFT_MID_SERVO - robot.MAX_CLAW_OFFSET);
-        robot.rightClaw.setPosition(robot.RIGHT_MID_SERVO + robot.MAX_CLAW_OFFSET);
+        robot.getLeftClaw().setPosition(Constants.LEFT_MID_SERVO - Constants.MAX_CLAW_OFFSET);
+        robot.getRightClaw().setPosition(Constants.RIGHT_MID_SERVO + Constants.MAX_CLAW_OFFSET);
         robot.armUp();
         robot.armUp();
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
+        robot.getLeftDrive().setMode(Constants.MOTOR_RUN_MODE);
+        robot.getRightDrive().setMode(Constants.MOTOR_RUN_MODE);
+        robot.getJewelArm().setPosition(Constants.JEWEL_UP_LIMIT);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -211,13 +211,13 @@ public class Blue2_Auto_Mode extends LinearOpMode {
                 char[] colors = new char[3];
                 while (runtime.time(TimeUnit.SECONDS) < 30 && move == 0) {
                     for (int i = 0; i < 3; i++) {
-                        robot.jewelServo.setPosition(robot.JEWEL_STOPS[i]);
+                        robot.getJewelArm().setPosition(Constants.JEWEL_STOPS[i]);
 
                         sleep(1000);
-//                    double alpha = robot.sensorColor.alpha();
-                        double red = robot.sensorColor.red();
-                        double blue = robot.sensorColor.blue();
-//                    double green = robot.sensorColor.green();
+//                    double alpha = robot.getColorSensor().alpha();
+                        double red = robot.getColorSensor().red();
+                        double blue = robot.getColorSensor().blue();
+//                    double green = robot.getColorSensor().green();
                         if (red > blue) {
                             colors[i] = 'R';
                         } else if (red < blue) {
@@ -249,7 +249,7 @@ public class Blue2_Auto_Mode extends LinearOpMode {
                     forward(0.45, 0.5);
                 }
                 sleep(2000);
-                robot.jewelServo.setPosition(robot.JEWEL_UP_LIMIT);
+                robot.getJewelArm().setPosition(Constants.JEWEL_UP_LIMIT);
                 telemetry.addData("Detected colors", String.valueOf(colors));
                 telemetry.addData("Color(outright", colors[0] + colors[1] + colors[2]);
                 telemetry.update();
@@ -262,8 +262,8 @@ public class Blue2_Auto_Mode extends LinearOpMode {
 //                turn(0, 1, 0.5);
 //                forward(0.5, 0.5);
 //
-//                robot.leftClaw.setPosition(robot.LEFT_MID_SERVO + robot.MAX_CLAW_OFFSET);
-//                robot.rightClaw.setPosition(robot.RIGHT_MID_SERVO - robot.MAX_CLAW_OFFSET);
+//                robot.getLeftClaw().setPosition(Constants.LEFT_MID_SERVO + Constants.MAX_CLAW_OFFSET);
+//                robot.getRightClaw().setPosition(Constants.RIGHT_MID_SERVO - Constants.MAX_CLAW_OFFSET);
 
                 sleep(5000);
                 count += 1;

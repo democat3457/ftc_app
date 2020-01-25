@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import java.lang.invoke.ConstantCallSite;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -122,6 +124,25 @@ public class Drivebase extends Constants {
     public void armDown() {
         leftArm.setPosition(leftArm.getPosition() - Constants.DOWN_ARM_SPEED);
         rightArm.setPosition(rightArm.getPosition() - Constants.DOWN_ARM_SPEED);
+    }
+
+    public void resetEncoders() {
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        thirdWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(Constants.MOTOR_RUN_MODE);
+        rightDrive.setMode(Constants.MOTOR_RUN_MODE);
+        thirdWheel.setMode(Constants.MOTOR_RUN_MODE);
+    }
+
+    public void resetEncoders(DcMotor motor) {
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(Constants.MOTOR_RUN_MODE);
+    }
+
+    public void resetEncoders(DcMotor motor, DcMotor.RunMode runMode) {
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(runMode);
     }
 
     public HardwareMap getHardwareMap() { return hwMap; }

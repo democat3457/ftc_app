@@ -33,6 +33,7 @@ public class Constants {
     public static final DcMotor.Direction THIRD_WHEEL_REVERSE = DcMotor.Direction.REVERSE;
 
     public static final DcMotor.RunMode MOTOR_RUN_MODE = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+    public static final DcMotor.RunMode ARM_RUN_MODE = DcMotor.RunMode.RUN_USING_ENCODER;
 
     // Servos
     public static final String LEFT_CLAW_NAME = "left_hand";
